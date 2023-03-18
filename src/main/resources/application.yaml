@@ -1,0 +1,19 @@
+server:
+  port: 8000
+
+bot:
+  webhook-path: https://7a3f-194-226-248-0.eu.ngrok.io
+  token: 6059530887:AAFHPmDyT_obKiD-uI2TSUMGnRzSV-n11PE
+  name: Weatherfy
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
