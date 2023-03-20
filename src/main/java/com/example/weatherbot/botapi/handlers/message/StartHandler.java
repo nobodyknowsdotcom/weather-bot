@@ -1,6 +1,6 @@
 package com.example.weatherbot.botapi.handlers.message;
 
-import com.example.weatherbot.model.UserState;
+import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.service.UserService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

@@ -1,7 +1,7 @@
 package com.example.weatherbot.model;
 
+import com.example.weatherbot.enums.UserState;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.DynamicUpdate;
@@ -18,17 +18,11 @@ import org.hibernate.annotations.DynamicUpdate;
 @Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    @NotNull
+    @Column(name = "user_id")
     Long chatId;
     String city;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn
-    UserStateEntity userStateEntity;
-    Integer apiCalls;
-
-    public UserState getUserState(){
-        return this.userStateEntity.getUserState();
-    }
+    @Enumerated(value = EnumType.STRING)
+    UserState userState;
+    @Builder.Default
+    Integer apiCalls = 0;
 }
