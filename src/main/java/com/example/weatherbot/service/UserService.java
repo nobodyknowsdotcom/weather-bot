@@ -20,12 +20,14 @@ public class UserService {
     public void createUserIfNotExists(Long chatId, UserState state) {
 
         if (userRepository.existsUserByChatId(chatId)){
+            log.info("user {} already exists, skip creating", chatId);
             return;
         }
 
         User userToSave = User.builder()
                 .chatId(chatId)
                 .userState(state)
+                .apiCalls(0)
                 .build();
 
         log.info("saving user {}", chatId);
@@ -34,15 +36,30 @@ public class UserService {
 
     public void updateUserState(Long chatId, UserState userState){
 
-         if(!userRepository.existsById(chatId)){
-             return;
+         Optional<User> optionalUser = userRepository.findById(chatId);
+         if(optionalUser.isEmpty()){
+            log.error("cannot update user state of {} because was not found", chatId);
+            return;
          }
-
-         User user = userRepository.findById(chatId).get();
+         User user = optionalUser.get();
          user.setUserState(userState);
 
-         log.info("updating user {}", user);
          userRepository.save(user);
+        log.info("updated state of {}", user);
+    }
+
+    public void updateUserCity(Long chatId, String city){
+
+        Optional<User> optionalUser = userRepository.findById(chatId);
+        if(optionalUser.isEmpty()){
+            log.error("cannot update city of {} because was not found", chatId);
+            return;
+        }
+        User user = optionalUser.get();
+        user.setCity(city);
+
+        userRepository.save(user);
+        log.info("updated city of {}", user);
     }
 
     public Optional<User> findUserByChatId(Long chatId){

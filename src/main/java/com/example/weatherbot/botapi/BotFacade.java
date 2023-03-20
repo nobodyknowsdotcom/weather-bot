@@ -33,7 +33,7 @@ public class BotFacade {
         if(update.hasCallbackQuery()){
 
             CallbackQuery callbackQuery = update.getCallbackQuery();
-            replyMessage = callbackQueryContext.processCallbackQuery(callbackQuery);
+            replyMessage = callbackQueryContext.handleCallbackQuery(callbackQuery);
         }
 
         if(update.hasMessage() && update.getMessage().hasText()){
