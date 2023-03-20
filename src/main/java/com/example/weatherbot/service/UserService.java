@@ -1,8 +1,7 @@
 package com.example.weatherbot.service;
 
-import com.example.weatherbot.model.UserState;
+import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.model.User;
-import com.example.weatherbot.model.UserStateEntity;
 import com.example.weatherbot.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,20 +19,30 @@ public class UserService {
 
     public void createUserIfNotExists(Long chatId, UserState state) {
 
-        if (userRepository.existsById(chatId)){
+        if (userRepository.existsUserByChatId(chatId)){
             return;
         }
 
-        UserStateEntity userStateEntity = UserStateEntity.builder()
-                .userState(state)
-                .build();
         User userToSave = User.builder()
                 .chatId(chatId)
+                .userState(state)
                 .build();
-        userStateEntity.setUser(userToSave);
-        userToSave.setUserStateEntity(userStateEntity);
 
+        log.info("saving user {}", chatId);
         userRepository.save(userToSave);
+    }
+
+    public void updateUserState(Long chatId, UserState userState){
+
+         if(!userRepository.existsById(chatId)){
+             return;
+         }
+
+         User user = userRepository.findById(chatId).get();
+         user.setUserState(userState);
+
+         log.info("updating user {}", user);
+         userRepository.save(user);
     }
 
     public Optional<User> findUserByChatId(Long chatId){

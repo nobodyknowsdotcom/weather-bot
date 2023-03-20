@@ -1,6 +1,6 @@
 package com.example.weatherbot.botapi.handlers.message;
 
-import com.example.weatherbot.model.UserState;
+import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.service.UserService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -17,7 +17,7 @@ public class RegistrationHandler implements MessageHandler{
     @Override
     public SendMessage handleMessage(Message message) {
 
-        userService.createUserIfNotExists(message.getChatId(), this.getHandlerType());
+        userService.updateUserState(message.getChatId(), this.getHandlerType());
 
         return new SendMessage(message.getChatId().toString(), this.getHandlerType().getTitle());
     }

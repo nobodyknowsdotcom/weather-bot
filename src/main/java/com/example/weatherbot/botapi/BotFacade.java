@@ -3,7 +3,7 @@ package com.example.weatherbot.botapi;
 import com.example.weatherbot.botapi.handlers.callbackquery.CallbackQueryContext;
 import com.example.weatherbot.botapi.handlers.message.BotStateContext;
 import com.example.weatherbot.model.User;
-import com.example.weatherbot.model.UserState;
+import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,7 @@ public class BotFacade {
 
         switch (inputMessage) {
             case "/start" -> botState = UserState.START;
-            case "/register" -> botState = UserState.REGISTRATION;
+            case "/registration" -> botState = UserState.REGISTRATION;
             default -> {
 
                 Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
@@ -59,12 +59,12 @@ public class BotFacade {
                 if (optionalUser.isPresent()) {
                     // if user is in database, get his state
                     User user = optionalUser.get();
-                    log.info("Processing user {} with state {}", user.getId(), user.getUserState());
+                    log.info("Processing user {} with state {}", user.getChatId(), user.getUserState());
                     botState = user.getUserState();
                 } else {
-                    // if user never used bot, set his state
-                    log.info("Processing new user {} with state {}", message.getChatId(), UserState.REGISTRATION);
-                    botState = UserState.REGISTRATION;
+                    // if user never used bot, set his state to START and call StartHandler
+                    log.info("Processing new user {} with state {}", message.getChatId(), UserState.START);
+                    botState = UserState.START;
                 }
             }
         }
