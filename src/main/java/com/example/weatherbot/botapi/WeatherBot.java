@@ -30,8 +30,10 @@ public class WeatherBot extends TelegramWebhookBot {
         return botFacade.handleUpdate(update);
     }
 
+    // I don't understand why this method is needed.
     @Override
-    public void setWebhook(SetWebhook setWebhook){}
+    public void setWebhook(SetWebhook setWebhook){
+    }
 
     @Override
     public String getBotPath() {

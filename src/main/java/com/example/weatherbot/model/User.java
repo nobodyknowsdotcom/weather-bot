@@ -23,5 +23,6 @@ public class User {
     String city;
     @Enumerated(value = EnumType.STRING)
     UserState userState;
+    @Builder.Default
     Integer apiCalls = 0;
 }
