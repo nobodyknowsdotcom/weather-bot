@@ -24,10 +24,39 @@ public class InlineKeyboardFactory {
         return markup;
     }
 
+    public InlineKeyboardMarkup getPopularCitiesWithChosenCity(String city){
+        InlineKeyboardMarkup mockMarkup = getPopularCitiesInlineKeyboard();
+        List<List<InlineKeyboardButton>> newMarkup = new ArrayList<>();
+
+        mockMarkup.getKeyboard()
+                .forEach( i -> {
+                    if (i.get(0).getCallbackData().contains(city)) {
+                        newMarkup.add(getCheckedCityButton(city));
+                    } else {
+                        newMarkup.add(i);
+                    }
+                }
+        );
+
+        return new InlineKeyboardMarkup(newMarkup);
+    }
+
+
+
     private List<InlineKeyboardButton> getCityAsButton(String city){
         List<InlineKeyboardButton> buttonRow = new ArrayList<>();
 
-        InlineKeyboardButton button = new InlineKeyboardButton(city + " " + Emoji.CITY.getText());
+        InlineKeyboardButton button = new InlineKeyboardButton(city);
+        button.setCallbackData(String.format("city=%s", city));
+        buttonRow.add(button);
+
+        return buttonRow;
+    }
+
+    private List<InlineKeyboardButton> getCheckedCityButton(String city){
+        List<InlineKeyboardButton> buttonRow = new ArrayList<>();
+
+        InlineKeyboardButton button = new InlineKeyboardButton(city + " " + Emoji.CHECKED.getText());
         button.setCallbackData(String.format("city=%s", city));
         buttonRow.add(button);
 
