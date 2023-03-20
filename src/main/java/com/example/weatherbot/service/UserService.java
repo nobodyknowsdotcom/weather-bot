@@ -4,6 +4,7 @@ import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.model.User;
 import com.example.weatherbot.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -34,6 +35,7 @@ public class UserService {
         userRepository.save(userToSave);
     }
 
+    @Async
     public void updateUserState(Long chatId, UserState userState){
 
          Optional<User> optionalUser = userRepository.findById(chatId);
@@ -48,6 +50,7 @@ public class UserService {
         log.info("updated state of {}", user);
     }
 
+    @Async
     public void updateUserCity(Long chatId, String city){
 
         Optional<User> optionalUser = userRepository.findById(chatId);
