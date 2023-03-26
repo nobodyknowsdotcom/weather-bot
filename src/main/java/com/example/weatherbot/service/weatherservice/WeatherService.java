@@ -1,8 +1,5 @@
-package com.example.weatherbot.service;
+package com.example.weatherbot.service.weatherservice;
 
-import com.example.weatherbot.model.weather.ForecastInfo;
-import com.example.weatherbot.model.weather.LocationInfo;
-import com.example.weatherbot.model.weather.WeatherInfo;
 import com.example.weatherbot.weatherapi.WeatherApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
@@ -18,36 +15,33 @@ public class WeatherService {
         this.weatherApi = weatherApi;
     }
 
-    public String getWeatherByCoordinates(double lan, double lon) throws JsonProcessingException {
+    public WeatherInfo getWeatherByCoordinates(double lan, double lon) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getWeatherByCoordinates(lan, lon);
 
         if (response.getStatusCode().value() != 200) {
             throw new ResponseStatusException(response.getStatusCode());
         }
 
-        WeatherInfo weatherInfo = new WeatherInfo(response);
-        return weatherInfo.toString();
+        return new WeatherInfo(response);
     }
 
-    public String getForecastByCoordinates(double lan, double lon) throws JsonProcessingException {
+    public ForecastInfo getForecastByCoordinates(double lan, double lon) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getForecastByCoordinates(lan, lon);
 
         if (response.getStatusCode().value() != 200) {
             throw new ResponseStatusException(response.getStatusCode());
         }
 
-        ForecastInfo forecastInfo = new ForecastInfo(response);
-        return forecastInfo.toString();
+        return new ForecastInfo(response);
     }
 
-    public String getLocationCoordinatesByNameAndCode(String name) throws JsonProcessingException {
+    public LocationInfo getLocationCoordinatesByNameAndCode(String name) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getLocationCoordinatesByNameAndCode(name);
 
         if (response.getStatusCode().value() != 200) {
             throw new ResponseStatusException(response.getStatusCode());
         }
 
-        LocationInfo locationInfo = new LocationInfo(response);
-        return locationInfo.toString();
+        return new LocationInfo(response);
     }
 }

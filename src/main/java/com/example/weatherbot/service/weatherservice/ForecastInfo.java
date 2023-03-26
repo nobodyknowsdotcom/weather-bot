@@ -1,4 +1,4 @@
-package com.example.weatherbot.model.weather;
+package com.example.weatherbot.service.weatherservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ForecastInfo {
     private final ArrayList<WeatherInfo> forecast = new ArrayList<>();
 
-    public ForecastInfo(ResponseEntity<String> response) throws JsonProcessingException {
+    protected ForecastInfo(ResponseEntity<String> response) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(response.getBody());
         for (JsonNode node : jsonNode.get("list")) {

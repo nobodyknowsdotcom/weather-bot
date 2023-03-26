@@ -1,4 +1,4 @@
-package com.example.weatherbot.model.weather;
+package com.example.weatherbot.service.weatherservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,11 +30,11 @@ public class WeatherInfo {
     //timestamp
     private final int dt;
 
-    public WeatherInfo(ResponseEntity<String> response) throws JsonProcessingException {
+    protected WeatherInfo(ResponseEntity<String> response) throws JsonProcessingException {
         this(new ObjectMapper().readTree(response.getBody()));
     }
 
-    public WeatherInfo(JsonNode jsonNode) {
+    protected WeatherInfo(JsonNode jsonNode) {
         temperature = jsonNode.get("main").get("temp").asDouble();
         feltTemperature = jsonNode.get("main").get("feels_like").asDouble();
         minTemperature = jsonNode.get("main").get("temp_min").asDouble();

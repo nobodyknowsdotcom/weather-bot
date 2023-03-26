@@ -1,6 +1,6 @@
 package com.example.weatherbot;
 
-import com.example.weatherbot.service.WeatherService;
+import com.example.weatherbot.service.weatherservice.WeatherService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

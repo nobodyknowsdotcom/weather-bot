@@ -1,4 +1,4 @@
-package com.example.weatherbot.model.weather;
+package com.example.weatherbot.service.weatherservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,7 +14,7 @@ public class LocationInfo {
     private final double lat;
     private final double lon;
     private final String countryCode;
-    public LocationInfo(ResponseEntity<String> response) throws JsonProcessingException {
+    protected LocationInfo(ResponseEntity<String> response) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(response.getBody()).get(0);
         locationName = jsonNode.get("name").asText();
