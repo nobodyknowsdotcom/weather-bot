@@ -7,6 +7,9 @@ bot:
   name: Weatherfy
   most-popular-cities: Екатеринбург,Москва,Санкт Петербург,Казань,Краснодар
 
+weatherApi:
+  token: b3aad3b9c2d7988afae46a7f1973b6d7
+  units: metric
 
 spring:
   datasource:

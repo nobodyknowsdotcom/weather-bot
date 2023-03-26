@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.106s</div>
+<div class="counter">0.004s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.106s</td>
+<td class="success">0.004s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,37 +87,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>17:13:16.939 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [WeatherBotApplicationTests]: using SpringBootContextLoader
-17:13:16.942 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.example.weatherbot.WeatherBotApplicationTests]: no resource found for suffixes {-context.xml, Context.groovy}.
-17:13:16.942 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.weatherbot.WeatherBotApplicationTests]: WeatherBotApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-17:13:16.952 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using ContextCustomizers for test class [WeatherBotApplicationTests]: [DisableObservabilityContextCustomizer, PropertyMappingContextCustomizer, Customizer, ExcludeFilterContextCustomizer, DuplicateJsonObjectContextCustomizer, MockitoContextCustomizer, TestRestTemplateContextCustomizer]
-17:13:16.980 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/Users/dmitrymedvedev/IdeaProjects/weather-bot/build/classes/java/main/com/example/weatherbot/WeatherBotApplication.class]
-17:13:16.981 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.weatherbot.WeatherBotApplication for test class com.example.weatherbot.WeatherBotApplicationTests
-17:13:17.018 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners for test class [WeatherBotApplicationTests]: [ServletTestExecutionListener, DirtiesContextBeforeModesTestExecutionListener, ApplicationEventsTestExecutionListener, MockitoTestExecutionListener, DependencyInjectionTestExecutionListener, DirtiesContextTestExecutionListener, TransactionalTestExecutionListener, SqlScriptsTestExecutionListener, EventPublishingTestExecutionListener, RestDocsTestExecutionListener, MockRestServiceServerResetTestExecutionListener, MockMvcPrintOnlyOnFailureTestExecutionListener, WebDriverTestExecutionListener, MockWebServiceServerTestExecutionListener, ResetMocksTestExecutionListener]
-17:13:17.019 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: class [WeatherBotApplicationTests], class annotated with @DirtiesContext [false] with mode [null]
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::                (v3.0.4)
-
-2023-03-16T17:13:17.123+05:00  INFO 50728 --- [    Test worker] c.e.w.WeatherBotApplicationTests         : Starting WeatherBotApplicationTests using Java 17.0.5 with PID 50728 (started by dmitrymevdedev in /Users/dmitrymedvedev/IdeaProjects/weather-bot)
-2023-03-16T17:13:17.124+05:00  INFO 50728 --- [    Test worker] c.e.w.WeatherBotApplicationTests         : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2023-03-16T17:13:17.342+05:00  INFO 50728 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-03-16T17:13:17.349+05:00  INFO 50728 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 4 ms. Found 0 JPA repository interfaces.
-2023-03-16T17:13:17.497+05:00  INFO 50728 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2023-03-16T17:13:17.578+05:00  INFO 50728 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:2d723ba0-1a9c-4b8a-88d2-d5f66d564007 user=SA
-2023-03-16T17:13:17.579+05:00  INFO 50728 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2023-03-16T17:13:17.598+05:00  INFO 50728 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-03-16T17:13:17.617+05:00  INFO 50728 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.1.7.Final
-2023-03-16T17:13:17.730+05:00  INFO 50728 --- [    Test worker] SQL dialect                              : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-2023-03-16T17:13:17.836+05:00  INFO 50728 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-03-16T17:13:17.840+05:00  INFO 50728 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-03-16T17:13:17.900+05:00  WARN 50728 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-03-16T17:13:18.058+05:00  INFO 50728 --- [    Test worker] c.e.w.WeatherBotApplicationTests         : Started WeatherBotApplicationTests in 1.02 seconds (process running for 1.441)
+<pre>2023-03-26T05:11:45.461+05:00  INFO 11992 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.weatherbot.WeatherBotApplicationTests]: WeatherBotApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-03-26T05:11:45.464+05:00  INFO 11992 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.weatherbot.WeatherBotApplication for test class com.example.weatherbot.WeatherBotApplicationTests
 </pre>
 </span>
 </div>
@@ -129,7 +100,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 7.6.1</a> at 16 мар. 2023 г., 17:13:18</p>
+<a href="http://www.gradle.org">Gradle 8.0.2</a> at 26 мар. 2023 г., 05:11:46</p>
 </div>
 </div>
 </body>
