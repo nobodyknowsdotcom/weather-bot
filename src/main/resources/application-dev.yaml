@@ -7,6 +7,14 @@ bot:
   name: Weatherfy
   most-popular-cities: Екатеринбург,Москва,Санкт Петербург,Казань,Краснодар
 
+weatherApi:
+  protocol: https
+  host: api.openweathermap.org
+  weatherEndpoint: /data/2.5/weather
+  forecastEndpoint: /data/2.5/forecast
+  geoEndpoint: /geo/1.0/direct
+  token: b3aad3b9c2d7988afae46a7f1973b6d7
+  units: metric
 
 spring:
   datasource:
