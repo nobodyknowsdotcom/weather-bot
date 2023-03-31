@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @DynamicUpdate
-@Table(name = "weatherfy_user")
+@Table(name = "weather_users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter

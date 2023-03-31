@@ -44,4 +44,14 @@ public class WeatherService {
 
         return new LocationInfo(response);
     }
+
+    public LocationInfo getCityByCoordinates(Double lat, Double lon) throws JsonProcessingException {
+        ResponseEntity<String> response = weatherApi.getReverseLocationByCoordinates(lat, lon);
+
+        if (response.getStatusCode().value() != 200) {
+            throw new ResponseStatusException(response.getStatusCode());
+        }
+
+        return new LocationInfo(response);
+    }
 }

@@ -2,7 +2,7 @@ package com.example.weatherbot.botapi.handlers.callbackquery;
 
 import com.example.weatherbot.botapi.WeatherBot;
 import com.example.weatherbot.enums.UserState;
-import com.example.weatherbot.factory.InlineKeyboardFactory;
+import com.example.weatherbot.botapi.buttons.InlineKeyboardFactory;
 import com.example.weatherbot.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -42,14 +42,11 @@ public class CitySelectionHandler implements CallbackQueryHandler {
                 .chatId(chatId).build();
         weatherBot.sendEditReplyMarkup(editMessageReplyMarkup);
 
-        String replyMessage = String.format("%s, установлен город %s", UserState.COMPLETE_REGISTRATION.getTitle(), city);
-        weatherBot.sendMessage(chatId, replyMessage);
-
         return new SendMessage();
     }
 
     @Override
     public UserState getHandlerName() {
-        return UserState.REGISTRATION;
+        return UserState.IN_REGISTRATION;
     }
 }
