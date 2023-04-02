@@ -1,14 +1,20 @@
 package com.example.weatherbot.weatherapi;
 
 import com.example.weatherbot.config.WeatherApiProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+
 @Service
+@Slf4j
 public class WeatherApi {
 
+    public static final String APPID = "appid";
+    public static final String UNITS = "units";
     private final WeatherApiProperties weatherApiProperties;
     private final RestTemplate restTemplate;
 
@@ -18,41 +24,71 @@ public class WeatherApi {
     }
 
     public ResponseEntity<String> getWeatherByCoordinates(double lat, double lon) {
-        String uri = UriComponentsBuilder.newInstance()
-                .scheme("https").host("api.openweathermap.org").path("/data/2.5/weather")
+        URI uri = UriComponentsBuilder.newInstance()
+                .scheme(weatherApiProperties.getProtocol())
+                .host(weatherApiProperties.getHost())
+                .path("/data/2.5/weather")
                 .queryParam("lat", lat)
                 .queryParam("lon", lon)
-                .queryParam("appid", weatherApiProperties.getToken())
-                .queryParam("units", weatherApiProperties.getUnits())
+                .queryParam(APPID, weatherApiProperties.getToken())
+                .queryParam(UNITS, weatherApiProperties.getUnits())
                 .encode()
-                .toUriString();
+                .build()
+                .toUri();
 
+        log.info("GET {}", uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 
-    public ResponseEntity<String> getForecastByCoordinates(double latitude, double longtitude) {
-        String uri = UriComponentsBuilder.newInstance()
-                .scheme("https").host("api.openweathermap.org").path("/data/2.5/forecast")
+    public ResponseEntity<String> getForecastByCoordinates(double latitude, double longitude) {
+        URI uri = UriComponentsBuilder.newInstance()
+                .scheme(weatherApiProperties.getProtocol())
+                .host(weatherApiProperties.getHost())
+                .path("/data/2.5/forecast")
                 .queryParam("lat", latitude)
-                .queryParam("lon", longtitude)
-                .queryParam("appid", weatherApiProperties.getToken())
-                .queryParam("units", weatherApiProperties.getUnits())
+                .queryParam("lon", longitude)
+                .queryParam(APPID, weatherApiProperties.getToken())
+                .queryParam(UNITS, weatherApiProperties.getUnits())
                 .encode()
-                .toUriString();
+                .build()
+                .toUri();
 
+        log.info("GET {}", uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 
     public ResponseEntity<String> getLocationCoordinatesByNameAndCode(String locationName) {
-        String uri = UriComponentsBuilder.newInstance()
-                .scheme("https").host("api.openweathermap.org").path("/geo/1.0/direct")
+        URI uri = UriComponentsBuilder.newInstance()
+                .scheme(weatherApiProperties.getProtocol())
+                .host(weatherApiProperties.getHost())
+                .path("/geo/1.0/direct")
                 .queryParam("q", locationName)
                 .queryParam("limit", 1)
-                .queryParam("appid", weatherApiProperties.getToken())
-                .queryParam("units", weatherApiProperties.getUnits())
+                .queryParam(APPID, weatherApiProperties.getToken())
+                .queryParam(UNITS, weatherApiProperties.getUnits())
                 .encode()
-                .toUriString();
+                .build()
+                .toUri();
 
+        log.info("GET {}", uri);
+        return restTemplate.getForEntity(uri, String.class);
+    }
+
+    public ResponseEntity<String> getReverseLocationByCoordinates(Double lat, Double lon){
+        URI uri = UriComponentsBuilder.newInstance()
+                .scheme(weatherApiProperties.getProtocol())
+                .host(weatherApiProperties.getHost())
+                .path("/geo/1.0/reverse")
+                .queryParam("lat", lat)
+                .queryParam("lon", lon)
+                .queryParam("limit", 1)
+                .queryParam(APPID, weatherApiProperties.getToken())
+                .queryParam(UNITS, weatherApiProperties.getUnits())
+                .encode()
+                .build()
+                .toUri();
+
+        log.info("GET {}", uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 }

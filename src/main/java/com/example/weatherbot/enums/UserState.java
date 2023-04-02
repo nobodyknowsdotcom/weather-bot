@@ -6,8 +6,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum UserState {
-    START ("Пройди регистрацию, чтобы получить доступ к сервису -> /registration"),
-    REGISTRATION("Выбери свой город из списка. Если твоего города нет в списке, пришли мне свои координаты"),
+    START ("Пройди регистрацию, чтобы получить доступ к сервису /registration"),
+    START_REGISTRATION("Выбери свой город из списка. Если твоего города нет в списке, пришли мне название своего города или свои координаты"),
+    IN_REGISTRATION(""),
     COMPLETE_REGISTRATION("Регистрация пройдена успешно"),
     GOT_FORECAST("Держи прогноз погоды");
 

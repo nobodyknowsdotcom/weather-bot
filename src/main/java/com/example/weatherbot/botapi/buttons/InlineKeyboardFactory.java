@@ -1,4 +1,4 @@
-package com.example.weatherbot.factory;
+package com.example.weatherbot.botapi.buttons;
 
 import com.example.weatherbot.enums.Emoji;
 import org.springframework.beans.factory.annotation.Value;
