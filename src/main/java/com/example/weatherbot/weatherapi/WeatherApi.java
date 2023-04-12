@@ -57,6 +57,22 @@ public class WeatherApi {
         return restTemplate.getForEntity(uri, String.class);
     }
 
+    public ResponseEntity<String> getForecastByCityName(String locationName){
+        URI uri = UriComponentsBuilder.newInstance()
+                .scheme(weatherApiProperties.getProtocol())
+                .host(weatherApiProperties.getHost())
+                .path("/data/2.5/forecast")
+                .queryParam("q", locationName)
+                .queryParam(APPID, weatherApiProperties.getToken())
+                .queryParam(UNITS, weatherApiProperties.getUnits())
+                .encode()
+                .build()
+                .toUri();
+
+        log.info("GET {}", uri);
+        return restTemplate.getForEntity(uri, String.class);
+    }
+
     public ResponseEntity<String> getLocationCoordinatesByNameAndCode(String locationName) {
         URI uri = UriComponentsBuilder.newInstance()
                 .scheme(weatherApiProperties.getProtocol())

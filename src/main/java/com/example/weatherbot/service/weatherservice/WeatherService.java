@@ -21,7 +21,6 @@ public class WeatherService {
         if (response.getStatusCode().value() != 200) {
             throw new ResponseStatusException(response.getStatusCode());
         }
-
         return new WeatherInfo(response);
     }
 
@@ -31,7 +30,15 @@ public class WeatherService {
         if (response.getStatusCode().value() != 200) {
             throw new ResponseStatusException(response.getStatusCode());
         }
+        return new ForecastInfo(response);
+    }
 
+    public ForecastInfo getForecastByCityName(String locationName) throws JsonProcessingException {
+        ResponseEntity<String> response = weatherApi.getForecastByCityName(locationName);
+
+        if (response.getStatusCode().value() != 200) {
+            throw new ResponseStatusException(response.getStatusCode());
+        }
         return new ForecastInfo(response);
     }
 
@@ -41,7 +48,6 @@ public class WeatherService {
         if (response.getStatusCode().value() != 200) {
             throw new ResponseStatusException(response.getStatusCode());
         }
-
         return new LocationInfo(response);
     }
 
@@ -51,7 +57,6 @@ public class WeatherService {
         if (response.getStatusCode().value() != 200) {
             throw new ResponseStatusException(response.getStatusCode());
         }
-
         return new LocationInfo(response);
     }
 }
