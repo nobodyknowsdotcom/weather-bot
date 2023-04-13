@@ -24,6 +24,15 @@ public class WeatherService {
         return new WeatherInfo(response);
     }
 
+    public WeatherInfo getWeatherByName(String name) throws JsonProcessingException {
+        ResponseEntity<String> response = weatherApi.getWeatherByName(name);
+
+        if (response.getStatusCode().value() != 200) {
+            throw new ResponseStatusException(response.getStatusCode());
+        }
+        return new WeatherInfo(response);
+    }
+
     public ForecastInfo getForecastByCoordinates(double lan, double lon) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getForecastByCoordinates(lan, lon);
 

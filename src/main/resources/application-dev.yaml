@@ -2,3 +2,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+bot:
+  api-quota: 100

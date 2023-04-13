@@ -15,6 +15,7 @@ public class WeatherApi {
 
     public static final String APPID = "appid";
     public static final String UNITS = "units";
+    public static final String GET = "GET {}";
     private final WeatherApiProperties weatherApiProperties;
     private final RestTemplate restTemplate;
 
@@ -30,6 +31,24 @@ public class WeatherApi {
                 .path("/data/2.5/weather")
                 .queryParam("lat", lat)
                 .queryParam("lon", lon)
+                .queryParam(APPID, weatherApiProperties.getToken())
+                .queryParam(UNITS, weatherApiProperties.getUnits())
+                .encode()
+                .build()
+                .toUri();
+
+        log.info(GET, uri);
+        return restTemplate.getForEntity(uri, String.class);
+    }
+
+    public ResponseEntity<String> getWeatherByName(String name) {
+        URI uri = UriComponentsBuilder.newInstance()
+                .scheme(weatherApiProperties.getProtocol())
+                .host(weatherApiProperties.getHost())
+                .path("/data/2.5/weather")
+                .queryParam("q", name)
+                .queryParam("lang", "ru")
+                .queryParam(UNITS, "metric")
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
                 .encode()
@@ -65,6 +84,7 @@ public class WeatherApi {
                 .queryParam("q", locationName)
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
+                .queryParam("lang", "ru")
                 .encode()
                 .build()
                 .toUri();
@@ -82,6 +102,7 @@ public class WeatherApi {
                 .queryParam("limit", 1)
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
+                .queryParam("lang", "ru")
                 .encode()
                 .build()
                 .toUri();

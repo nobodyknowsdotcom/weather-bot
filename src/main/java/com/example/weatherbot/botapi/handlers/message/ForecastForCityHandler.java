@@ -1,9 +1,10 @@
 package com.example.weatherbot.botapi.handlers.message;
 
 import com.example.weatherbot.enums.UserState;
+import com.example.weatherbot.mapper.WeatherMapper;
 import com.example.weatherbot.model.User;
 import com.example.weatherbot.service.UserService;
-import com.example.weatherbot.service.weatherservice.ForecastInfo;
+import com.example.weatherbot.service.weatherservice.WeatherInfo;
 import com.example.weatherbot.service.weatherservice.WeatherService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,16 +43,18 @@ public class ForecastForCityHandler implements MessageHandler{
         }
 
         try {
-            // TODO parse forecastInfo into nice message
-            ForecastInfo forecastInfo = weatherService.getForecastByCityName(message.getText());
+            WeatherInfo weatherInfo = weatherService.getWeatherByName(message.getText());
+            String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
+
             user.incrementApiCalls();
             userService.updateUser(user);
 
             log.info("user {} got forecast", message.getChatId());
-            return new SendMessage(message.getChatId().toString(), "i am forecast .-.");
+            return new SendMessage(message.getChatId().toString(), formattedForecast);
         } catch (Exception e){
             log.error(e.getMessage());
-            return new SendMessage(message.getChatId().toString(), UserState.FORECAST_NOT_FOUND.getTitle());
+            String errorReply = String.format(UserState.FORECAST_NOT_FOUND.getTitle(), message.getText());
+            return new SendMessage(message.getChatId().toString(), errorReply);
         }
     }
 

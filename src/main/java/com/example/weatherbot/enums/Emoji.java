@@ -8,6 +8,19 @@ import lombok.Getter;
 public enum Emoji {
     CITY ("🏙️"),
     CHECKED("✅"),
+    THUNDERSTORM("⛈⚡️"),
+    DRIZZLE("\uD83D\uDCA7"),
+    RAIN("\uD83C\uDF27"),
+    SNOW("❄️⛄️"),
+    ATMOSPHERE("\uD83D\uDE36\u200D\uD83C\uDF2B️"),
+    CLEAR("☀️"),
+    CLOUDS("⛅️"),
+    KAZAKHSTAN_FLAG("\uD83C\uDDF0\uD83C\uDDFF"),
+    TEMPERATURE("\uD83C\uDF21"),
+    WATER("\uD83D\uDCA7"),
+    WIND("\uD83D\uDCA8"),
+    SUNSET("\uD83C\uDF05"),
+    SUNRISE("\uD83C\uDF04"),
     UNCHECKED("\uD83D\uDEAB");
 
     private final String text;

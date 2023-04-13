@@ -45,6 +45,7 @@ public class BotFacade {
             replyMessage = handleMessage(message);
         }
 
+        replyMessage.setParseMode("Markdown");
         return replyMessage;
     }
 
