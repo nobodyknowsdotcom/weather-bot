@@ -29,6 +29,13 @@ public class WeatherInfo {
     private final int cloudiness;
     //timestamp
     private final int dt;
+    //weather condition, more info on https://openweathermap.org/weather-conditions
+    private final int conditionId;
+    //description of weather condition
+    private final String conditionDescription;
+    //sunrise timestamp
+    private int sunriseTimestamp;
+    private int sunsetTimestamp;
 
     protected WeatherInfo(ResponseEntity<String> response) throws JsonProcessingException {
         this(new ObjectMapper().readTree(response.getBody()));
@@ -41,8 +48,18 @@ public class WeatherInfo {
         maxTemperature = jsonNode.get("main").get("temp_max").asDouble();
         pressure = jsonNode.get("main").get("pressure").asInt();
         humidity = jsonNode.get("main").get("humidity").asInt();
+
+        conditionId = jsonNode.get("weather").get(0).get("id").asInt();
+        conditionDescription = jsonNode.get("weather").get(0).get("description").asText();
+
         windSpeed = jsonNode.get("wind").get("speed").asInt();
         cloudiness = jsonNode.get("clouds").get("all").asInt();
+
         dt = jsonNode.get("dt").asInt();
+
+        try{
+            sunriseTimestamp = jsonNode.get("sys").get("sunrise").asInt();
+            sunsetTimestamp = jsonNode.get("sys").get("sunset").asInt();
+        } catch (Exception e){}
     }
 }

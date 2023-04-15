@@ -12,12 +12,12 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 @Service
-public class CitySelectionHandler implements CallbackQueryHandler {
+public class CallbackCitySelectionHandler implements CallbackQueryHandler {
     private final InlineKeyboardFactory inlineKeyboardFactory;
     private final UserService userService;
     private final WeatherBot weatherBot;
 
-    public CitySelectionHandler(InlineKeyboardFactory inlineKeyboardFactory, UserService userService, WeatherBot weatherBot) {
+    public CallbackCitySelectionHandler(InlineKeyboardFactory inlineKeyboardFactory, UserService userService, WeatherBot weatherBot) {
         this.inlineKeyboardFactory = inlineKeyboardFactory;
         this.userService = userService;
         this.weatherBot = weatherBot;

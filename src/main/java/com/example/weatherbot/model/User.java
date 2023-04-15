@@ -25,4 +25,8 @@ public class User {
     UserState userState;
     @Builder.Default
     Integer apiCalls = 0;
+
+    public void incrementApiCalls(){
+        this.apiCalls++;
+    }
 }

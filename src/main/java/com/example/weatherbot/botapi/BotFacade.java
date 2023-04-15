@@ -45,6 +45,7 @@ public class BotFacade {
             replyMessage = handleMessage(message);
         }
 
+        replyMessage.setParseMode("Markdown");
         return replyMessage;
     }
 
@@ -55,6 +56,7 @@ public class BotFacade {
         switch (inputMessage) {
             case "/start" -> userState = UserState.START;
             case "/registration" -> userState = UserState.START_REGISTRATION;
+            case "/forcity" -> userState = UserState.INIT_FORECAST_FOR_CITY;
             default -> {
                 Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
 

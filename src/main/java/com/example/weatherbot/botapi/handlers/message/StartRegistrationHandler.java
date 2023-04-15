@@ -22,7 +22,7 @@ public class StartRegistrationHandler implements MessageHandler{
         SendMessage messageToSend = new SendMessage(message.getChatId().toString(), this.getHandlerType().getTitle());
         messageToSend.setReplyMarkup(inlineKeyboardFactory.getPopularCitiesInlineKeyboard());
 
-        userService.updateUserState(message.getChatId(), UserState.IN_REGISTRATION);
+        userService.updateUserState(message.getChatId(), getOutputType());
 
         return messageToSend;
     }
@@ -30,5 +30,10 @@ public class StartRegistrationHandler implements MessageHandler{
     @Override
     public UserState getHandlerType() {
         return UserState.START_REGISTRATION;
+    }
+
+    @Override
+    public UserState getOutputType() {
+        return UserState.IN_REGISTRATION;
     }
 }

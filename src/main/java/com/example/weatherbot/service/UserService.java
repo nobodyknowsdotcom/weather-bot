@@ -65,6 +65,18 @@ public class UserService {
         log.info("updated city of {}", user);
     }
 
+    public boolean updateUser(User user){
+        if(userRepository.existsById(user.getChatId())){
+            userRepository.save(user);
+            log.info("updated user {}", user.getChatId());
+            return true;
+        } else {
+            log.info("user {} not found and can not be updated", user.getChatId());
+            return false;
+        }
+
+    }
+
     public Optional<User> findUserByChatId(Long chatId){
         return userRepository.findByChatId(chatId);
     }
