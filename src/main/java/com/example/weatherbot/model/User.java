@@ -21,12 +21,19 @@ public class User {
     @Column(name = "user_id")
     Long chatId;
     String city;
+    @OneToOne(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    ForecastSchedule forecastSchedule;
     @Enumerated(value = EnumType.STRING)
     UserState userState;
     @Builder.Default
     Integer apiCalls = 0;
 
-    public void incrementApiCalls(){
+    public void incrementApiCalls() {
         this.apiCalls++;
     }
 }
