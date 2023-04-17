@@ -57,6 +57,7 @@ public class BotFacade {
             case "/start" -> userState = UserState.START;
             case "/registration" -> userState = UserState.START_REGISTRATION;
             case "/forcity" -> userState = UserState.INIT_FORECAST_FOR_CITY;
+            case "/schedule" -> userState = UserState.CHANGE_SCHEDULE_SETTINGS;
             default -> {
                 Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
 

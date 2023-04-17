@@ -1,7 +1,9 @@
 package com.example.weatherbot.service;
 
 import com.example.weatherbot.enums.UserState;
+import com.example.weatherbot.model.ForecastSchedule;
 import com.example.weatherbot.model.User;
+import com.example.weatherbot.repository.ForecastScheduleRepository;
 import com.example.weatherbot.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -13,9 +15,11 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final ForecastScheduleRepository forecastScheduleRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ForecastScheduleRepository forecastScheduleRepository) {
         this.userRepository = userRepository;
+        this.forecastScheduleRepository = forecastScheduleRepository;
     }
 
     public void createUserIfNotExists(Long chatId, UserState state) {
@@ -44,7 +48,17 @@ public class UserService {
             return;
          }
          User user = optionalUser.get();
-         user.setUserState(userState);
+         ForecastSchedule forecastSchedule;
+
+        user.setUserState(userState);
+
+        if(user.getForecastSchedule() == null){
+             forecastSchedule = new ForecastSchedule();
+             forecastSchedule.setUser(user);
+             user.setForecastSchedule(forecastSchedule);
+             forecastScheduleRepository.save(forecastSchedule);
+         }
+
 
          userRepository.save(user);
         log.info("updated state of {}", user);

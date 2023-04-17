@@ -12,4 +12,4 @@ spring:
 
 bot:
   api-quota: 100
-
+  schedule-cron: 0 */1 * * * *
