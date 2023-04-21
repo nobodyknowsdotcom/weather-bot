@@ -1,13 +1,10 @@
 package com.example.weatherbot.botapi.handlers.message;
 
 import com.example.weatherbot.enums.UserState;
-import com.example.weatherbot.mapper.WeatherMapper;
 import com.example.weatherbot.model.ForecastSchedule;
 import com.example.weatherbot.model.User;
-import com.example.weatherbot.repository.ForecastScheduleRepository;
 import com.example.weatherbot.service.UserService;
 import com.example.weatherbot.service.forecastscheduleservice.ForecastScheduleService;
-import com.example.weatherbot.service.weatherservice.WeatherInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -38,7 +35,6 @@ public class ScheduleChangeHandler implements MessageHandler {
         } else {
             user = optionalUser.get();
         }
-
 
         user.setUserState(UserState.IDLE);
         userService.updateUser(user);

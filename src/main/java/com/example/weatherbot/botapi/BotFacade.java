@@ -35,12 +35,7 @@ public class BotFacade {
             replyMessage = callbackQueryContext.handleCallbackQuery(callbackQuery);
         }
 
-        if(update.hasMessage() && update.getMessage().hasLocation()){
-            Message message = update.getMessage();
-            replyMessage = handleLocation(message);
-        }
-
-        if(update.hasMessage() && update.getMessage().hasText()){
+        if(update.hasMessage() && (update.getMessage().hasText() || update.getMessage().hasLocation())){
             Message message = update.getMessage();
             replyMessage = handleMessage(message);
         }
@@ -72,19 +67,6 @@ public class BotFacade {
                     userState = UserState.START;
                 }
             }
-        }
-
-        return userStateContext.processInputMessage(message, userState);
-    }
-
-    private SendMessage handleLocation(Message message){
-        UserState userState;
-        Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
-
-        if (optionalUser.isEmpty()){
-            userState = UserState.START;
-        } else {
-            userState = optionalUser.get().getUserState();
         }
 
         return userStateContext.processInputMessage(message, userState);
