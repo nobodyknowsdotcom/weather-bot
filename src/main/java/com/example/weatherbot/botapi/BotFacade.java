@@ -48,27 +48,35 @@ public class BotFacade {
         String inputMessage = message.getText();
         UserState userState;
 
+        if (message.hasLocation()){
+            userState = getUserStateByUserIdOrSetStart(message.getChatId());
+            return userStateContext.processInputMessage(message, userState);
+        }
+
         switch (inputMessage) {
             case "/start" -> userState = UserState.START;
             case "/registration" -> userState = UserState.START_REGISTRATION;
-            case "/forcity" -> userState = UserState.INIT_FORECAST_FOR_CITY;
+            case "/forcity", "/forgeo" -> userState = UserState.INIT_FORECAST_BY_COMMAND;
             case "/schedule" -> userState = UserState.CHANGE_SCHEDULE_SETTINGS;
-            default -> {
-                Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
-
-                if (optionalUser.isPresent()) {
-                    // if user is in database, get his state
-                    User user = optionalUser.get();
-                    log.info("Processing user {} with state {}", user.getChatId(), user.getUserState());
-                    userState = user.getUserState();
-                } else {
-                    // if user never used bot, set his state to START and call StartHandler
-                    log.info("Processing new user {} with state {}", message.getChatId(), UserState.START);
-                    userState = UserState.START;
-                }
-            }
+            default -> userState = getUserStateByUserIdOrSetStart(message.getChatId());
         }
-
         return userStateContext.processInputMessage(message, userState);
+    }
+
+    private UserState getUserStateByUserIdOrSetStart(Long chadId) {
+        UserState userState;
+        Optional<User> optionalUser = userService.findUserByChatId(chadId);
+
+        if (optionalUser.isPresent()) {
+            // if user is in database, get his state
+            User user = optionalUser.get();
+            log.info("Processing user {} with state {}", user.getChatId(), user.getUserState());
+            userState = user.getUserState();
+        } else {
+            // if user never used bot, set his state to START and call StartHandler
+            log.info("Processing new user {} with state {}", chadId, UserState.START);
+            userState = UserState.START;
+        }
+        return userState;
     }
 }

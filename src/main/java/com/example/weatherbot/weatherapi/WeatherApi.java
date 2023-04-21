@@ -31,6 +31,7 @@ public class WeatherApi {
                 .path("/data/2.5/weather")
                 .queryParam("lat", lat)
                 .queryParam("lon", lon)
+                .queryParam("lang", "ru")
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
                 .encode()
@@ -48,14 +49,13 @@ public class WeatherApi {
                 .path("/data/2.5/weather")
                 .queryParam("q", name)
                 .queryParam("lang", "ru")
-                .queryParam(UNITS, "metric")
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
                 .encode()
                 .build()
                 .toUri();
 
-        log.info("GET {}", uri);
+        log.info(GET, uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 
@@ -66,13 +66,14 @@ public class WeatherApi {
                 .path("/data/2.5/forecast")
                 .queryParam("lat", latitude)
                 .queryParam("lon", longitude)
+                .queryParam("lang", "ru")
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
                 .encode()
                 .build()
                 .toUri();
 
-        log.info("GET {}", uri);
+        log.info(GET, uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 
@@ -82,14 +83,14 @@ public class WeatherApi {
                 .host(weatherApiProperties.getHost())
                 .path("/data/2.5/forecast")
                 .queryParam("q", locationName)
+                .queryParam("lang", "ru")
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
-                .queryParam("lang", "ru")
                 .encode()
                 .build()
                 .toUri();
 
-        log.info("GET {}", uri);
+        log.info(GET, uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 
@@ -100,14 +101,14 @@ public class WeatherApi {
                 .path("/geo/1.0/direct")
                 .queryParam("q", locationName)
                 .queryParam("limit", 1)
+                .queryParam("lang", "ru")
                 .queryParam(APPID, weatherApiProperties.getToken())
                 .queryParam(UNITS, weatherApiProperties.getUnits())
-                .queryParam("lang", "ru")
                 .encode()
                 .build()
                 .toUri();
 
-        log.info("GET {}", uri);
+        log.info(GET, uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 
@@ -125,7 +126,7 @@ public class WeatherApi {
                 .build()
                 .toUri();
 
-        log.info("GET {}", uri);
+        log.info(GET, uri);
         return restTemplate.getForEntity(uri, String.class);
     }
 }

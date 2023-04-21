@@ -61,7 +61,7 @@ public class CitySelectionHandler implements MessageHandler{
     }
 
     @Override
-    public UserState getHandlerType() {
+    public UserState getInputType() {
         return UserState.IN_REGISTRATION;
     }
 

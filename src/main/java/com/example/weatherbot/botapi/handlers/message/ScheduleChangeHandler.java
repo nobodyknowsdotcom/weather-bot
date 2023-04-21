@@ -57,7 +57,7 @@ public class ScheduleChangeHandler implements MessageHandler {
     }
 
     @Override
-    public UserState getHandlerType() {
+    public UserState getInputType() {
         return UserState.CHANGE_SCHEDULE_SETTINGS;
     }
 
