@@ -19,7 +19,7 @@ public class ForecastSchedule {
     @Column(name = "schedule_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long scheduleId;
-
+    @Builder.Default
     Boolean isScheduleEnabled = false;
 
     @OneToOne(fetch = FetchType.LAZY)

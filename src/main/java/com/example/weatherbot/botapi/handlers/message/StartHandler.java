@@ -17,13 +17,13 @@ public class StartHandler implements MessageHandler{
     @Override
     public SendMessage handleMessage(Message message) {
 
-        userService.createUserIfNotExists(message.getChatId(), this.getHandlerType());
+        userService.createUserIfNotExists(message.getChatId(), this.getInputType());
 
-        return new SendMessage(message.getChatId().toString(), this.getHandlerType().getTitle());
+        return new SendMessage(message.getChatId().toString(), this.getInputType().getTitle());
     }
 
     @Override
-    public UserState getHandlerType() {
+    public UserState getInputType() {
         return UserState.START;
     }
 
