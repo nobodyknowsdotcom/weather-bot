@@ -10,22 +10,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Location;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Optional;
 
 @Service
 @Slf4j
-public class ForecastByCommandHandler implements MessageHandler {
+public class ForecastForMyCityHandler implements MessageHandler{
     @Value("${bot.api-quota}")
     private Integer apiQuota;
-    private final WeatherService weatherService;
     private final UserService userService;
+    private final WeatherService weatherService;
 
-    public ForecastByCommandHandler(WeatherService weatherService, UserService userService) {
-        this.weatherService = weatherService;
+    public ForecastForMyCityHandler(UserService userService, WeatherService weatherService) {
         this.userService = userService;
+        this.weatherService = weatherService;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class ForecastByCommandHandler implements MessageHandler {
         Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
         User user;
 
-        if(optionalUser.isEmpty()){
+        if(optionalUser.isEmpty() || optionalUser.get().getCity() == null){
             return new SendMessage(message.getChatId().toString(), UserState.UNAUTHORIZED.getTitle());
         } else {
             user = optionalUser.get();
@@ -42,31 +41,26 @@ public class ForecastByCommandHandler implements MessageHandler {
             return new SendMessage(message.getChatId().toString(), UserState.OUT_OF_QUOTA.getTitle());
         }
 
+        WeatherInfo weatherInfo;
         try {
-            WeatherInfo weatherInfo;
-            if (message.hasLocation()){
-                Location location = message.getLocation();
-                weatherInfo = weatherService.getDailyWeatherInfoByCoordinates(location.getLatitude(), location.getLongitude());
-            } else {
-                weatherInfo = weatherService.getDailyWeatherInfoByName(message.getText());
-            }
-            String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
-
-            user.incrementApiCalls();
-            userService.updateUser(user);
-
-            log.info("user {} got forecast", message.getChatId());
-            return new SendMessage(message.getChatId().toString(), formattedForecast);
-        } catch (Exception e){
+            weatherInfo = weatherService.getDailyWeatherInfoByName(user.getCity());
+        } catch (Exception e) {
             log.error(e.getMessage());
             String errorReply = UserState.FORECAST_BY_COMMAND_NOT_FOUND.getTitle();
             return new SendMessage(message.getChatId().toString(), errorReply);
         }
+        String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
+
+        user.incrementApiCalls();
+        userService.updateUser(user);
+
+        log.info("user {} got forecast", message.getChatId());
+        return new SendMessage(message.getChatId().toString(), formattedForecast);
     }
 
     @Override
     public UserState getInputType() {
-        return UserState.FORECAST_BY_COMMAND;
+        return UserState.FORECAST_FOR_MY_CITY;
     }
 
     @Override

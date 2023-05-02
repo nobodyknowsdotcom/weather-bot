@@ -30,7 +30,7 @@ public class ScheduleChangeHandler implements MessageHandler {
         User user;
         ForecastSchedule forecastSchedule;
 
-        if (optionalUser.isEmpty()) {
+        if (optionalUser.isEmpty() || optionalUser.get().getCity() == null) {
             return new SendMessage(message.getChatId().toString(), UserState.UNAUTHORIZED.getTitle());
         } else {
             user = optionalUser.get();
@@ -51,9 +51,7 @@ public class ScheduleChangeHandler implements MessageHandler {
         }
         forecastScheduleService.save(forecastSchedule);
 
-
         return new SendMessage(message.getChatId().toString(), answer);
-
     }
 
     @Override
