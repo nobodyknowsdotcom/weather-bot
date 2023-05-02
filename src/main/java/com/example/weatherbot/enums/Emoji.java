@@ -21,6 +21,8 @@ public enum Emoji {
     WIND("\uD83D\uDCA8"),
     SUNSET("\uD83C\uDF05"),
     SUNRISE("\uD83C\uDF04"),
+    CALENDAR("\uD83D\uDCC5"),
+    GRAPH("\uD83D\uDCCA"),
     UNCHECKED("\uD83D\uDEAB");
 
     private final String text;

@@ -29,7 +29,7 @@ public class ScheduledForecastSending {
         for (User user : users) {
             WeatherInfo weatherInfo = null;
             try {
-                weatherInfo = weatherService.getWeatherByName(user.getCity());
+                weatherInfo = weatherService.getDailyWeatherInfoByName(user.getCity());
             } catch (JsonProcessingException e) {
                 continue;
             }

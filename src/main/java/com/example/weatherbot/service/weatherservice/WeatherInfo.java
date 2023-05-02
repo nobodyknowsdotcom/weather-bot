@@ -4,38 +4,41 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.http.ResponseEntity;
 
 @Getter
+@Setter
 @ToString
 public class WeatherInfo {
     //https://openweathermap.org/weather-data
     //temperature in Celsius
-    private final double temperature;
+    private double temperature;
     //felt temperature
-    private final double feltTemperature;
+    private double feltTemperature;
     //minimal temperature
-    private final double minTemperature;
+    private double minTemperature;
     //maximal temperature
-    private final double maxTemperature;
+    private double maxTemperature;
     //pressure in hPa
-    private final int pressure;
+    private int pressure;
     //humidity in percents
-    private final int humidity;
+    private int humidity;
     //wind speed in m/s
-    private final int windSpeed;
+    private int windSpeed;
     //cloudiness in percents
-    private final int cloudiness;
+    private int cloudiness;
     //timestamp
-    private final int dt;
+    private long date;
     //weather condition, more info on https://openweathermap.org/weather-conditions
-    private final int conditionId;
+    private int conditionId;
     //description of weather condition
-    private final String conditionDescription;
+    private String conditionDescription;
     //sunrise timestamp
-    private int sunriseTimestamp;
-    private int sunsetTimestamp;
+    private long sunriseTimestamp;
+    private long sunsetTimestamp;
+    private int timezone;
 
     protected WeatherInfo(ResponseEntity<String> response) throws JsonProcessingException {
         this(new ObjectMapper().readTree(response.getBody()));
@@ -55,11 +58,12 @@ public class WeatherInfo {
         windSpeed = jsonNode.get("wind").get("speed").asInt();
         cloudiness = jsonNode.get("clouds").get("all").asInt();
 
-        dt = jsonNode.get("dt").asInt();
+        date = jsonNode.get("dt").asLong();
 
         try{
-            sunriseTimestamp = jsonNode.get("sys").get("sunrise").asInt();
-            sunsetTimestamp = jsonNode.get("sys").get("sunset").asInt();
-        } catch (Exception e){}
+            sunriseTimestamp = jsonNode.get("sys").get("sunrise").asLong();
+            sunsetTimestamp = jsonNode.get("sys").get("sunset").asLong();
+            timezone = jsonNode.get("sunset").asInt();
+        } catch (Exception e) {}
     }
 }

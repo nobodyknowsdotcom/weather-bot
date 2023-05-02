@@ -57,6 +57,7 @@ public class BotFacade {
             case "/start" -> userState = UserState.START;
             case "/registration" -> userState = UserState.START_REGISTRATION;
             case "/forcity", "/forgeo" -> userState = UserState.INIT_FORECAST_BY_COMMAND;
+            case "/formycity" -> userState = UserState.FORECAST_FOR_MY_CITY;
             case "/schedule" -> userState = UserState.CHANGE_SCHEDULE_SETTINGS;
             default -> userState = getUserStateByUserIdOrSetStart(message.getChatId());
         }
