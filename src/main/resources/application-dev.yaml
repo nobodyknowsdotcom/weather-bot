@@ -1,8 +1,17 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
   jpa:
+    database: postgresql
+    show-sql: true
     hibernate:
       ddl-auto: create-drop
 
 bot:
   api-quota: 100
   schedule-cron: 0 */1 * * * *
+
+

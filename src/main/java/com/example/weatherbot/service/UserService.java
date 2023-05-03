@@ -20,7 +20,7 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+    @Async
     public void createUserIfNotExists(Long chatId, UserState state) {
         if (userRepository.existsUserByChatId(chatId)){
             log.info("User {} already exists, skip creating", chatId);
@@ -31,7 +31,6 @@ public class UserService {
         userRepository.save(user);
         log.info("Saved user {}", chatId);
     }
-
     @Async
     @SneakyThrows
     public void updateUserState(Long chatId, UserState userState){
@@ -42,7 +41,6 @@ public class UserService {
         userRepository.save(user);
         log.info("Updated state of {}", user);
     }
-
     @Async
     @SneakyThrows
     public void updateUserCity(Long chatId, String city){
@@ -53,7 +51,7 @@ public class UserService {
         userRepository.save(user);
         log.info("Updated city of {}", user);
     }
-
+    @Async
     public void updateUser(User user){
         if(userRepository.existsById(user.getChatId())){
             userRepository.save(user);
@@ -62,7 +60,6 @@ public class UserService {
             log.info("User {} not found and can not be updated", user.getChatId());
         }
     }
-
     public Optional<User> findUserByChatId(Long chatId){
         return userRepository.findByChatId(chatId);
     }

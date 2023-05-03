@@ -1,8 +1,9 @@
 server:
+  weather-cache-evict-cron: 0 0 3 * * *
   port: 8000
 
 bot:
-  webhook-path: https://a62b-176-59-208-173.ngrok-free.app
+  webhook-path: https://1a67-194-226-248-0.ngrok-free.app
   token: 6059530887:AAFHPmDyT_obKiD-uI2TSUMGnRzSV-n11PE
   name: Weatherfy
   most-popular-cities: Екатеринбург,Москва,Санкт Петербург,Казань,Краснодар
@@ -16,15 +17,3 @@ weatherApi:
   token: b3aad3b9c2d7988afae46a7f1973b6d7
   units: metric
   forecastStepInHours: 3
-
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database: postgresql
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
