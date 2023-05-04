@@ -3,6 +3,7 @@ package com.example.weatherbot.service.weatherservice;
 import com.example.weatherbot.weatherapi.WeatherApi;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +28,7 @@ public class WeatherService {
      * @return Прогноз на следующие 24 часа
      * @throws JsonProcessingException Выбрасывается, если не получилось распарсить ответ от openweather
      */
+    @Cacheable(value = "dailyWeatherByName")
     public WeatherInfo getDailyWeatherInfoByName(String name) throws JsonProcessingException {
         ForecastInfo forecastInfo = getForecastByCityName(name);
         List<WeatherInfo> weatherInfosForOneDay = forecastInfo.getForecast().stream()
@@ -46,6 +48,7 @@ public class WeatherService {
      * @return Прогноз на следующие 24 часа
      * @throws JsonProcessingException Выбрасывается, если не получилось распарсить ответ от openweather
      */
+    @Cacheable(value = "dailyWeatherByCoordinates")
     public WeatherInfo getDailyWeatherInfoByCoordinates(double lan, double lon) throws JsonProcessingException {
         ForecastInfo forecastInfo = getForecastByCoordinates(lan, lon);
         List<WeatherInfo> weatherInfosForOneDay = forecastInfo.getForecast().stream()
@@ -55,16 +58,7 @@ public class WeatherService {
 
         return ForecastParser.parseForecastToOneDayWeatherInfo(forecastInfo);
     }
-
-    public WeatherInfo getWeatherByCoordinates(double lan, double lon) throws JsonProcessingException {
-        ResponseEntity<String> response = weatherApi.getWeatherByCoordinates(lan, lon);
-
-        if (response.getStatusCode().value() != 200) {
-            throw new ResponseStatusException(response.getStatusCode());
-        }
-        return new WeatherInfo(response);
-    }
-
+    @Cacheable(value = "forecastByCoordinates")
     public ForecastInfo getForecastByCoordinates(double lan, double lon) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getForecastByCoordinates(lan, lon);
 
@@ -73,7 +67,7 @@ public class WeatherService {
         }
         return new ForecastInfo(response);
     }
-
+    @Cacheable(value = "forecastByName")
     public ForecastInfo getForecastByCityName(String locationName) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getForecastByCityName(locationName);
 
@@ -82,7 +76,7 @@ public class WeatherService {
         }
         return new ForecastInfo(response);
     }
-
+    @Cacheable(value = "locationByName")
     public LocationInfo getLocationCoordinatesByNameAndCode(String name) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getLocationCoordinatesByNameAndCode(name);
 
@@ -91,7 +85,7 @@ public class WeatherService {
         }
         return new LocationInfo(response);
     }
-
+    @Cacheable(value = "cityByCoordinates")
     public LocationInfo getCityByCoordinates(Double lat, Double lon) throws JsonProcessingException {
         ResponseEntity<String> response = weatherApi.getReverseLocationByCoordinates(lat, lon);
 

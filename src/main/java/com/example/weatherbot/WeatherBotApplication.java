@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableCaching
 @EnableScheduling
+@EnableCaching
 public class WeatherBotApplication {
 
     public static void main(String[] args) {

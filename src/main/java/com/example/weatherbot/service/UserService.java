@@ -21,7 +21,6 @@ public class UserService {
         this.userRepository = userRepository;
         this.stateService = stateService;
     }
-
     public void createUserIfNotExists(Long chatId, UserState state) {
         if (userRepository.existsUserByChatId(chatId)){
             log.info("User {} already exists, skip creating", chatId);
@@ -52,7 +51,6 @@ public class UserService {
         userRepository.save(user);
         log.info("Updated city of {}", user);
     }
-
     public void updateUser(User user){
         if(userRepository.existsById(user.getChatId())){
             userRepository.save(user);
@@ -61,7 +59,6 @@ public class UserService {
             log.info("User {} not found and can not be updated", user.getChatId());
         }
     }
-
     public Optional<User> findUserByChatId(Long chatId){
         return userRepository.findByChatId(chatId);
     }

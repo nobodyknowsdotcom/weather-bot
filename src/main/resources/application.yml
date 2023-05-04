@@ -1,4 +1,5 @@
 server:
+  weather-cache-evict-cron: 0 0 3 * * *
   port: 8000
 
 bot:
@@ -16,15 +17,3 @@ weatherApi:
   token: b3aad3b9c2d7988afae46a7f1973b6d7
   units: metric
   forecastStepInHours: 3
-
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database: postgresql
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
