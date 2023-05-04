@@ -1,10 +1,13 @@
 package com.example.weatherbot.service;
 
 import com.example.weatherbot.enums.UserState;
+import com.example.weatherbot.exception.UserNotFoundException;
+import com.example.weatherbot.factory.UserFactory;
 import com.example.weatherbot.model.User;
+import com.example.weatherbot.model.UserStateEntity;
 import com.example.weatherbot.repository.UserRepository;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,58 +16,49 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
+    private final StateService stateService;
+    public UserService(UserRepository userRepository, StateService stateService) {
         this.userRepository = userRepository;
+        this.stateService = stateService;
     }
-
     public void createUserIfNotExists(Long chatId, UserState state) {
-
         if (userRepository.existsUserByChatId(chatId)){
-            log.info("user {} already exists, skip creating", chatId);
+            log.info("User {} already exists, skip creating", chatId);
             return;
         }
 
-        User userToSave = User.builder()
-                .chatId(chatId)
-                .userState(state)
-                .apiCalls(0)
-                .build();
-
-        log.info("saving user {}", chatId);
-        userRepository.save(userToSave);
-    }
-
-    @Async
-    public void updateUserState(Long chatId, UserState userState){
-
-         Optional<User> optionalUser = userRepository.findById(chatId);
-         if(optionalUser.isEmpty()){
-            log.error("cannot update user state of {} because was not found", chatId);
-            return;
-         }
-         User user = optionalUser.get();
-         user.setUserState(userState);
-
-         userRepository.save(user);
-        log.info("updated state of {}", user);
-    }
-
-    @Async
-    public void updateUserCity(Long chatId, String city){
-
-        Optional<User> optionalUser = userRepository.findById(chatId);
-        if(optionalUser.isEmpty()){
-            log.error("cannot update city of {} because was not found", chatId);
-            return;
-        }
-        User user = optionalUser.get();
-        user.setCity(city);
-
+        UserStateEntity stateEntity = stateService.getUserStateEntityOrCreate(state);
+        User user = UserFactory.getUserWithInBuiltSchedule(chatId, stateEntity);
         userRepository.save(user);
-        log.info("updated city of {}", user);
+        log.info("Saved user {}", chatId);
     }
+    @SneakyThrows
+    public void updateUserState(Long chatId, UserState userState){
+        User user = userRepository.findById(chatId).orElseThrow(() ->
+                new UserNotFoundException(String.format("Cannot update user state of %s because was not found", chatId)));
 
+        UserStateEntity userStateEntity = stateService.getUserStateEntityOrCreate(userState);
+        user.setUserStateEntity(userStateEntity);
+        userRepository.save(user);
+        log.info("Updated state of {}", user);
+    }
+    @SneakyThrows
+    public void updateUserCity(Long chatId, String city){
+        User user = userRepository.findById(chatId).orElseThrow(() ->
+                new UserNotFoundException(String.format("Cannot update user state of %s because was not found", chatId)));
+
+        user.setCity(city);
+        userRepository.save(user);
+        log.info("Updated city of {}", user);
+    }
+    public void updateUser(User user){
+        if(userRepository.existsById(user.getChatId())){
+            userRepository.save(user);
+            log.info("Updated user {}", user.getChatId());
+        } else {
+            log.info("User {} not found and can not be updated", user.getChatId());
+        }
+    }
     public Optional<User> findUserByChatId(Long chatId){
         return userRepository.findByChatId(chatId);
     }

@@ -1,5 +1,6 @@
-package com.example.weatherbot.botapi.handlers.message;
+package com.example.weatherbot.botapi.handlers;
 
+import com.example.weatherbot.botapi.handlers.message.MessageHandler;
 import com.example.weatherbot.enums.UserState;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,11 +15,15 @@ public class BotStateContext {
     private final Map<UserState, MessageHandler> messageHandlers = new HashMap<>();
 
     public BotStateContext(List<MessageHandler> messageHandlers) {
-        messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandlerType(), handler));
+        messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getInputType(), handler));
     }
     public SendMessage processInputMessage(Message message, UserState currentState) {
 
         MessageHandler currentMessageHandler = findMessageHandler(currentState);
+
+        if (currentMessageHandler == null) { // Если хендлера еще не существует, бот просто молчит.
+            return new SendMessage();
+        }
 
         return currentMessageHandler.handleMessage(message);
     }

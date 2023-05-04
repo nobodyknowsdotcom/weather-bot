@@ -1,12 +1,3 @@
-server:
-  port: 8000
-
-bot:
-  webhook-path: https://7a3f-194-226-248-0.eu.ngrok.io
-  token: 6059530887:AAFHPmDyT_obKiD-uI2TSUMGnRzSV-n11PE
-  name: Weatherfy
-  most-popular-cities: Екатеринбург,Москва,Санкт Петербург,Казань,Краснодар
-
 spring:
   datasource:
     url: jdbc:h2:mem:default
@@ -19,3 +10,6 @@ spring:
     hibernate:
       ddl-auto: update
 
+bot:
+  api-quota: 100
+  schedule-cron: 0 */1 * * * *

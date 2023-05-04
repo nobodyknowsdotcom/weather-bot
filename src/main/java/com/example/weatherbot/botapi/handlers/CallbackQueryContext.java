@@ -1,5 +1,6 @@
-package com.example.weatherbot.botapi.handlers.callbackquery;
+package com.example.weatherbot.botapi.handlers;
 
+import com.example.weatherbot.botapi.handlers.callbackquery.CallbackQueryHandler;
 import com.example.weatherbot.enums.UserState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class CallbackQueryContext {
         SendMessage messageToSend = new SendMessage();
 
         switch (callbackQuery.getData().split("=")[0]){
-            case "city" -> messageToSend = callbackQueryHandlers.get(UserState.REGISTRATION).handle(callbackQuery);
+            case "city" -> messageToSend = callbackQueryHandlers.get(UserState.IN_REGISTRATION).handle(callbackQuery);
         }
 
         return messageToSend;

@@ -1,7 +1,7 @@
 package com.example.weatherbot.botapi;
 
-import com.example.weatherbot.botapi.handlers.callbackquery.CallbackQueryContext;
-import com.example.weatherbot.botapi.handlers.message.BotStateContext;
+import com.example.weatherbot.botapi.handlers.CallbackQueryContext;
+import com.example.weatherbot.botapi.handlers.BotStateContext;
 import com.example.weatherbot.model.User;
 import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.service.UserService;
@@ -18,12 +18,12 @@ import java.util.Optional;
 @Slf4j
 public class BotFacade {
     private final CallbackQueryContext callbackQueryContext;
-    private final BotStateContext botStateContext;
+    private final BotStateContext userStateContext;
     private final UserService userService;
 
-    public BotFacade(CallbackQueryContext callbackQueryContext, BotStateContext botStateContext, UserService userService) {
+    public BotFacade(CallbackQueryContext callbackQueryContext, BotStateContext userStateContext, UserService userService) {
         this.callbackQueryContext = callbackQueryContext;
-        this.botStateContext = botStateContext;
+        this.userStateContext = userStateContext;
         this.userService = userService;
     }
 
@@ -31,44 +31,53 @@ public class BotFacade {
         SendMessage replyMessage = new SendMessage();
 
         if(update.hasCallbackQuery()){
-
             CallbackQuery callbackQuery = update.getCallbackQuery();
             replyMessage = callbackQueryContext.handleCallbackQuery(callbackQuery);
         }
 
-        if(update.hasMessage() && update.getMessage().hasText()){
-
+        if(update.hasMessage() && (update.getMessage().hasText() || update.getMessage().hasLocation())){
             Message message = update.getMessage();
             replyMessage = handleMessage(message);
         }
 
+        replyMessage.setParseMode("Markdown");
         return replyMessage;
     }
 
     private SendMessage handleMessage(Message message){
         String inputMessage = message.getText();
-        UserState botState;
+        UserState userState;
 
-        switch (inputMessage) {
-            case "/start" -> botState = UserState.START;
-            case "/registration" -> botState = UserState.REGISTRATION;
-            default -> {
-
-                Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
-
-                if (optionalUser.isPresent()) {
-                    // if user is in database, get his state
-                    User user = optionalUser.get();
-                    log.info("Processing user {} with state {}", user.getChatId(), user.getUserState());
-                    botState = user.getUserState();
-                } else {
-                    // if user never used bot, set his state to START and call StartHandler
-                    log.info("Processing new user {} with state {}", message.getChatId(), UserState.START);
-                    botState = UserState.START;
-                }
-            }
+        if (message.hasLocation()){
+            userState = getUserStateByUserIdOrSetDefault(message.getChatId());
+            return userStateContext.processInputMessage(message, userState);
         }
 
-        return botStateContext.processInputMessage(message, botState);
+        switch (inputMessage) {
+            case "/start" -> userState = UserState.START;
+            case "/registration" -> userState = UserState.START_REGISTRATION;
+            case "/forcity", "/forgeo" -> userState = UserState.INIT_FORECAST_BY_COMMAND;
+            case "/formycity" -> userState = UserState.FORECAST_FOR_MY_CITY;
+            case "/schedule" -> userState = UserState.CHANGE_SCHEDULE_SETTINGS;
+            default -> userState = getUserStateByUserIdOrSetDefault(message.getChatId());
+        }
+        return userStateContext.processInputMessage(message, userState);
+    }
+
+    private UserState getUserStateByUserIdOrSetDefault(Long chadId) {
+        UserState userState;
+        Optional<User> optionalUser = userService.findUserByChatId(chadId);
+
+        if (optionalUser.isPresent()) {
+            // if user is in database, get his state
+            User user = optionalUser.get();
+            log.info("Processing user {} with state {}", user.getChatId(), user.getUserStateEntity());
+            userState = user.getUserState();
+        } else {
+            // if user never used bot, set his state to START and call StartHandler
+            log.info("Processing new user {} with state {}", chadId, UserState.START);
+            userState = UserState.START;
+        }
+        return userState;
     }
 }
