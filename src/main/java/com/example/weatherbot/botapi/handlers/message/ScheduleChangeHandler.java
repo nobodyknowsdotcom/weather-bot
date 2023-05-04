@@ -3,6 +3,8 @@ package com.example.weatherbot.botapi.handlers.message;
 import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.model.ForecastSchedule;
 import com.example.weatherbot.model.User;
+import com.example.weatherbot.model.UserStateEntity;
+import com.example.weatherbot.service.StateService;
 import com.example.weatherbot.service.UserService;
 import com.example.weatherbot.service.forecastscheduleservice.ForecastScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class ScheduleChangeHandler implements MessageHandler {
 
     private final UserService userService;
+    private final StateService stateService;
     private final ForecastScheduleService forecastScheduleService;
 
-    public ScheduleChangeHandler(UserService userService, ForecastScheduleService forecastScheduleService) {
+    public ScheduleChangeHandler(UserService userService, StateService stateService, ForecastScheduleService forecastScheduleService) {
         this.userService = userService;
+        this.stateService = stateService;
         this.forecastScheduleService = forecastScheduleService;
     }
 
@@ -36,7 +40,8 @@ public class ScheduleChangeHandler implements MessageHandler {
             user = optionalUser.get();
         }
 
-        user.setUserState(UserState.IDLE);
+        UserStateEntity userState = stateService.getUserStateEntityOrCreate(UserState.IDLE);
+        user.setUserStateEntity(userState);
         userService.updateUser(user);
 
         forecastSchedule = user.getForecastSchedule();

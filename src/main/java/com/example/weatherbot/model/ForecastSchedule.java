@@ -3,10 +3,8 @@ package com.example.weatherbot.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
-@DynamicUpdate
 @Table(name = "forecast_schedules")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
@@ -35,7 +33,7 @@ public class ForecastSchedule {
                 "chatId=" + user.getChatId() +
                 ", city='" + user.getCity() + '\'' +
                 ", forecastSchedule=" + "this" +
-                ", userState=" + user.getUserState() +
+                ", userState=" + user.getUserStateEntity() +
                 ", apiCalls=" + user.getApiCalls() +
                 '}' +
                 '}';
