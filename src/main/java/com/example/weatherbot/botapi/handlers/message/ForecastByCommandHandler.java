@@ -3,6 +3,8 @@ package com.example.weatherbot.botapi.handlers.message;
 import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.mapper.WeatherMapper;
 import com.example.weatherbot.model.User;
+import com.example.weatherbot.model.UserStateEntity;
+import com.example.weatherbot.service.StateService;
 import com.example.weatherbot.service.UserService;
 import com.example.weatherbot.service.weatherservice.WeatherInfo;
 import com.example.weatherbot.service.weatherservice.WeatherService;
@@ -21,10 +23,12 @@ public class ForecastByCommandHandler implements MessageHandler {
     @Value("${bot.api-quota}")
     private Integer apiQuota;
     private final WeatherService weatherService;
+    private final StateService stateService;
     private final UserService userService;
 
-    public ForecastByCommandHandler(WeatherService weatherService, UserService userService) {
+    public ForecastByCommandHandler(WeatherService weatherService, StateService stateService, UserService userService) {
         this.weatherService = weatherService;
+        this.stateService = stateService;
         this.userService = userService;
     }
 
@@ -44,6 +48,7 @@ public class ForecastByCommandHandler implements MessageHandler {
 
         try {
             WeatherInfo weatherInfo;
+
             if (message.hasLocation()){
                 Location location = message.getLocation();
                 weatherInfo = weatherService.getDailyWeatherInfoByCoordinates(location.getLatitude(), location.getLongitude());
@@ -52,7 +57,9 @@ public class ForecastByCommandHandler implements MessageHandler {
             }
             String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
 
+            UserStateEntity userState = stateService.getUserStateEntityOrCreate(getOutputType());
             user.incrementApiCalls();
+            user.setUserStateEntity(userState);
             userService.updateUser(user);
 
             log.info("user {} got forecast", message.getChatId());

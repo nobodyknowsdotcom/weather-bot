@@ -2,7 +2,7 @@ server:
   port: 8000
 
 bot:
-  webhook-path: https://a62b-176-59-208-173.ngrok-free.app
+  webhook-path: https://0cec-176-59-209-33.ngrok-free.app
   token: 6059530887:AAFHPmDyT_obKiD-uI2TSUMGnRzSV-n11PE
   name: Weatherfy
   most-popular-cities: Екатеринбург,Москва,Санкт Петербург,Казань,Краснодар
