@@ -4,10 +4,10 @@ import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.exception.UserNotFoundException;
 import com.example.weatherbot.factory.UserFactory;
 import com.example.weatherbot.model.User;
+import com.example.weatherbot.model.UserStateEntity;
 import com.example.weatherbot.repository.UserRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,32 +16,32 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
+    private final StateService stateService;
+    public UserService(UserRepository userRepository, StateService stateService) {
         this.userRepository = userRepository;
+        this.stateService = stateService;
     }
-    @Async
     public void createUserIfNotExists(Long chatId, UserState state) {
         if (userRepository.existsUserByChatId(chatId)){
             log.info("User {} already exists, skip creating", chatId);
             return;
         }
 
-        User user = UserFactory.getUserWithInBuiltSchedule(chatId, state);
+        UserStateEntity stateEntity = stateService.getUserStateEntityOrCreate(state);
+        User user = UserFactory.getUserWithInBuiltSchedule(chatId, stateEntity);
         userRepository.save(user);
         log.info("Saved user {}", chatId);
     }
-    @Async
     @SneakyThrows
     public void updateUserState(Long chatId, UserState userState){
         User user = userRepository.findById(chatId).orElseThrow(() ->
                 new UserNotFoundException(String.format("Cannot update user state of %s because was not found", chatId)));
 
-        user.setUserState(userState);
+        UserStateEntity userStateEntity = stateService.getUserStateEntityOrCreate(userState);
+        user.setUserStateEntity(userStateEntity);
         userRepository.save(user);
         log.info("Updated state of {}", user);
     }
-    @Async
     @SneakyThrows
     public void updateUserCity(Long chatId, String city){
         User user = userRepository.findById(chatId).orElseThrow(() ->
@@ -51,7 +51,6 @@ public class UserService {
         userRepository.save(user);
         log.info("Updated city of {}", user);
     }
-    @Async
     public void updateUser(User user){
         if(userRepository.existsById(user.getChatId())){
             userRepository.save(user);

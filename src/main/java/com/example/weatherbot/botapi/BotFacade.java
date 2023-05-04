@@ -49,7 +49,7 @@ public class BotFacade {
         UserState userState;
 
         if (message.hasLocation()){
-            userState = getUserStateByUserIdOrSetStart(message.getChatId());
+            userState = getUserStateByUserIdOrSetDefault(message.getChatId());
             return userStateContext.processInputMessage(message, userState);
         }
 
@@ -59,19 +59,19 @@ public class BotFacade {
             case "/forcity", "/forgeo" -> userState = UserState.INIT_FORECAST_BY_COMMAND;
             case "/formycity" -> userState = UserState.FORECAST_FOR_MY_CITY;
             case "/schedule" -> userState = UserState.CHANGE_SCHEDULE_SETTINGS;
-            default -> userState = getUserStateByUserIdOrSetStart(message.getChatId());
+            default -> userState = getUserStateByUserIdOrSetDefault(message.getChatId());
         }
         return userStateContext.processInputMessage(message, userState);
     }
 
-    private UserState getUserStateByUserIdOrSetStart(Long chadId) {
+    private UserState getUserStateByUserIdOrSetDefault(Long chadId) {
         UserState userState;
         Optional<User> optionalUser = userService.findUserByChatId(chadId);
 
         if (optionalUser.isPresent()) {
             // if user is in database, get his state
             User user = optionalUser.get();
-            log.info("Processing user {} with state {}", user.getChatId(), user.getUserState());
+            log.info("Processing user {} with state {}", user.getChatId(), user.getUserStateEntity());
             userState = user.getUserState();
         } else {
             // if user never used bot, set his state to START and call StartHandler

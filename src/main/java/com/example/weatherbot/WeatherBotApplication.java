@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableAsync
 @EnableTransactionManagement
+@EnableCaching
 @EnableScheduling
 @EnableCaching
 public class WeatherBotApplication {
