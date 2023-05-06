@@ -2,7 +2,7 @@ package com.example.weatherbot.botapi.handlers.message;
 
 import com.example.weatherbot.botapi.factory.InlineKeyboardFactory;
 import com.example.weatherbot.enums.UserState;
-import com.example.weatherbot.mapper.WeatherMapper;
+import com.example.weatherbot.mapper.ToMessageMapper;
 import com.example.weatherbot.model.User;
 import com.example.weatherbot.service.UserService;
 import com.example.weatherbot.service.weatherservice.WeatherInfo;
@@ -31,6 +31,11 @@ public class ForecastByCommandHandler implements MessageHandler {
         this.inlineKeyboardFactory = inlineKeyboardFactory;
     }
 
+    /**
+     * Возвращает прогноз на 1 день по геометке или названию населенного пункта.
+     * @param message Сообщение пользователя
+     * @return Ответ пользователю с прогнозом на следующие 24 часа с кнопкой для запроса прогноза на несколько дней.
+     */
     @Override
     public SendMessage handleMessage(Message message) {
         Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
@@ -54,14 +59,14 @@ public class ForecastByCommandHandler implements MessageHandler {
             } else {
                 weatherInfo = weatherService.getDailyWeatherInfoByName(message.getText());
             }
-            String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
+            String formattedForecast = ToMessageMapper.weatherInfoToMessage(weatherInfo);
 
             user.incrementApiCalls();
             userService.updateUser(user);
             userService.updateUserState(user.getChatId(), this.getOutputType());
 
             log.info("user {} got forecast", message.getChatId());
-            sendMessage.setReplyMarkup(inlineKeyboardFactory.getForecastButton());
+            sendMessage.setReplyMarkup(inlineKeyboardFactory.getForecastButton(weatherInfo.getCity()));
             sendMessage.setText(formattedForecast);
         } catch (Exception e){
             log.error(e.getMessage());

@@ -3,42 +3,46 @@ package com.example.weatherbot.service.weatherservice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 
 @Getter
 @Setter
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class WeatherInfo {
     //https://openweathermap.org/weather-data
     //temperature in Celsius
-    private double temperature;
+    double temperature;
     //felt temperature
-    private double feltTemperature;
+    double feltTemperature;
     //minimal temperature
-    private double minTemperature;
+    double minTemperature;
     //maximal temperature
-    private double maxTemperature;
+    double maxTemperature;
     //pressure in hPa
-    private int pressure;
+    int pressure;
     //humidity in percents
-    private int humidity;
+    int humidity;
     //wind speed in m/s
-    private int windSpeed;
+    int windSpeed;
     //cloudiness in percents
-    private int cloudiness;
+    int cloudiness;
     //timestamp
-    private long date;
+    long date;
     //weather condition, more info on https://openweathermap.org/weather-conditions
-    private int conditionId;
+    int conditionId;
     //description of weather condition
-    private String conditionDescription;
+    String conditionDescription;
     //sunrise timestamp
-    private long sunriseTimestamp;
-    private long sunsetTimestamp;
-    private int timezone;
+    long sunriseTimestamp;
+    long sunsetTimestamp;
+    int timezone;
+    String city;
 
     protected WeatherInfo(ResponseEntity<String> response) throws JsonProcessingException {
         this(new ObjectMapper().readTree(response.getBody()));

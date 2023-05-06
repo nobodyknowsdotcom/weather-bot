@@ -14,8 +14,6 @@ import java.util.List;
 public class InlineKeyboardFactory {
     @Value("#{'${bot.most-popular-cities}'.split(',')}")
     private List<String> cities;
-    @Value("${bot.days-in-forecast}")
-    private Integer daysInForecast;
     public InlineKeyboardMarkup getPopularCitiesInlineKeyboard(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
@@ -46,15 +44,16 @@ public class InlineKeyboardFactory {
     /**
      * Фабричный метод. Возвращает кнопку для получения прогноза на заданное количество дней.
      * Количество дней для прогноза кладет в callbackData по схеме 'forecast=<количество дней>'
+     * @param city Город, по которому будет взят прогноз
      * @return Кнопка с встроенной CallbackData
      */
-    public InlineKeyboardMarkup getForecastButton(){
+    public InlineKeyboardMarkup getForecastButton(String city){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<InlineKeyboardButton> buttonRow = new ArrayList<>();
 
         InlineKeyboardButton button = new InlineKeyboardButton(UserState.FORECAST_BY_BUTTON.getTitle());
-        button.setCallbackData(String.format("forecast=%s", this.daysInForecast));
+        button.setCallbackData(String.format("forecast=%s", city));
 
         buttonRow.add(button);
         buttons.add(buttonRow);

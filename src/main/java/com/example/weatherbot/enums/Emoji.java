@@ -23,6 +23,7 @@ public enum Emoji {
     SUNRISE("\uD83C\uDF04"),
     CALENDAR("\uD83D\uDCC5"),
     GRAPH("\uD83D\uDCCA"),
+    TONGUE("\uD83D\uDC45"),
     UNCHECKED("\uD83D\uDEAB");
 
     private final String text;
