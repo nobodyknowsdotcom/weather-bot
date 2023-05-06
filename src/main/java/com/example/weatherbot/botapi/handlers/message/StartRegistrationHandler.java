@@ -1,7 +1,7 @@
 package com.example.weatherbot.botapi.handlers.message;
 
 import com.example.weatherbot.enums.UserState;
-import com.example.weatherbot.botapi.buttons.InlineKeyboardFactory;
+import com.example.weatherbot.botapi.factory.InlineKeyboardFactory;
 import com.example.weatherbot.service.UserService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

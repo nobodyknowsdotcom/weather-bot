@@ -1,7 +1,7 @@
 package com.example.weatherbot.service.forecastscheduleservice;
 
 import com.example.weatherbot.botapi.WeatherBot;
-import com.example.weatherbot.mapper.WeatherMapper;
+import com.example.weatherbot.mapper.ToMessageMapper;
 import com.example.weatherbot.model.User;
 import com.example.weatherbot.repository.UserRepository;
 import com.example.weatherbot.service.weatherservice.WeatherInfo;
@@ -33,7 +33,7 @@ public class ScheduledForecastSending {
             } catch (JsonProcessingException e) {
                 continue;
             }
-            String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
+            String formattedForecast = ToMessageMapper.weatherInfoToMessage(weatherInfo);
             log.info("sending scheduled message for user {}", user);
             weatherBot.sendMessage(user.getChatId(), formattedForecast);
         }

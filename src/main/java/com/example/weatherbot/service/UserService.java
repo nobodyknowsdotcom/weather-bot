@@ -32,6 +32,11 @@ public class UserService {
         userRepository.save(user);
         log.info("Saved user {}", chatId);
     }
+    /**
+     * Изменяет состояние пользователя.
+     * @param chatId Id пользователя, которому нужно сменить состояние
+     * @param userState Состояние, которое будет присвоено пользователю
+     */
     @SneakyThrows
     public void updateUserState(Long chatId, UserState userState){
         User user = userRepository.findById(chatId).orElseThrow(() ->

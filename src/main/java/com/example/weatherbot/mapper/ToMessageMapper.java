@@ -7,17 +7,37 @@ import com.example.weatherbot.service.weatherservice.WeatherInfo;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-public class WeatherMapper {
-    public static String forecastInfoToMessage(ForecastInfo forecastInfo, Integer step, Integer days){
+public class ToMessageMapper {
+    private ToMessageMapper(){};
+    /**
+     * Маппит ForecastInfo в красивое сообщение для пользователя.
+     * @param forecastInfo Прогноз, который нужно преобразовать в строку.
+     *                     Каждый weatherInfo в ForecastInfo должен описывать один день.
+     * @return Красивое представление ForecastInfo в виде строки.
+     */
+    public static String forecastInfoToMessage(ForecastInfo forecastInfo){
         StringBuilder sb = new StringBuilder();
-        long firstTimestamp = forecastInfo.getForecast().get(0).getDate();
 
-        forecastInfo.getForecast()
-                .subList(0, days)
-                .stream()
-                .filter(x -> (firstTimestamp - x.getDate()) % step == 0)
-                .toList()
-                .forEach(x -> sb.append(parseWeatherInfoFromForecast(x)));
+        forecastInfo.getForecast().forEach(weatherInfo -> {
+            sb.append(String.format("%s %s %s",
+                    Emoji.CALENDAR.getText(),
+                    unixTimeToDate("yyyy/MM/dd", weatherInfo.getDate(), weatherInfo.getTimezone()),
+                    "\n"
+            ));
+            sb.append(String.format("%s %s %s",
+                    getWeatherConditionEmoji(weatherInfo.getConditionId()), weatherInfo.getConditionDescription(),
+                    "\n"
+            ));
+            sb.append(String.format("%s минимум %.1f°C, максимум %.1f°C %s",
+                    Emoji.TEMPERATURE.getText(), weatherInfo.getMinTemperature(), weatherInfo.getMaxTemperature(),
+                    "\n"
+            ));
+            sb.append(String.format("%s ощущается как %.1f°C %s",
+                    Emoji.TONGUE.getText(), weatherInfo.getFeltTemperature(),
+                    "\n"
+            ));
+            sb.append("\n");
+        });
 
         return sb.toString();
     }
@@ -27,7 +47,7 @@ public class WeatherMapper {
 
         sb.append(String.format("%s %s: %s",
                 Emoji.CALENDAR.getText(),
-                unixTimeToDate("yyy/MM/dd HH:mm", System.currentTimeMillis() / 1000L, weatherInfo.getTimezone()),
+                unixTimeToDate("yyyy/MM/dd", weatherInfo.getDate(), weatherInfo.getTimezone()),
                 "\n"
         ));
         sb.append(String.format("%s %s %s",

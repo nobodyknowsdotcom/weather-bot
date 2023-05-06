@@ -2,7 +2,7 @@ package com.example.weatherbot.botapi.handlers.callbackquery;
 
 import com.example.weatherbot.botapi.WeatherBot;
 import com.example.weatherbot.enums.UserState;
-import com.example.weatherbot.botapi.buttons.InlineKeyboardFactory;
+import com.example.weatherbot.botapi.factory.InlineKeyboardFactory;
 import com.example.weatherbot.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class CallbackCitySelectionHandler implements CallbackQueryHandler {
 
         // start a transaction, change user state and city
         String city = callbackQuery.getData().split("=")[1];
-        userService.updateUserState(chatId, UserState.COMPLETE_REGISTRATION);
+        userService.updateUserState(chatId, this.getOutputType());
         userService.updateUserCity(chatId, city);
 
         // add green checkbox to city chosen by user
@@ -46,7 +46,12 @@ public class CallbackCitySelectionHandler implements CallbackQueryHandler {
     }
 
     @Override
-    public UserState getHandlerName() {
+    public UserState getInputType() {
         return UserState.IN_REGISTRATION;
+    }
+
+    @Override
+    public UserState getOutputType() {
+        return UserState.COMPLETE_REGISTRATION;
     }
 }

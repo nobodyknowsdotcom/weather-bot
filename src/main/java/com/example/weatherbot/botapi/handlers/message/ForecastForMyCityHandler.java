@@ -1,7 +1,8 @@
 package com.example.weatherbot.botapi.handlers.message;
 
+import com.example.weatherbot.botapi.factory.InlineKeyboardFactory;
 import com.example.weatherbot.enums.UserState;
-import com.example.weatherbot.mapper.WeatherMapper;
+import com.example.weatherbot.mapper.ToMessageMapper;
 import com.example.weatherbot.model.User;
 import com.example.weatherbot.service.UserService;
 import com.example.weatherbot.service.weatherservice.WeatherInfo;
@@ -21,15 +22,24 @@ public class ForecastForMyCityHandler implements MessageHandler{
     private Integer apiQuota;
     private final UserService userService;
     private final WeatherService weatherService;
+    private final InlineKeyboardFactory inlineKeyboardFactory;
 
-    public ForecastForMyCityHandler(UserService userService, WeatherService weatherService) {
+    public ForecastForMyCityHandler(UserService userService, WeatherService weatherService, InlineKeyboardFactory inlineKeyboardFactory) {
         this.userService = userService;
         this.weatherService = weatherService;
+        this.inlineKeyboardFactory = inlineKeyboardFactory;
     }
 
+    /**
+     * Отправляет пользователю прогноз для его города.
+     * Для неавторизованных пользователей вернет сообщение с уведомлением, что необходимо авторизоваться.
+     * @param message Сообщение пользователя
+     * @return Ответ пользователю с прогнозом на следующие 24 часа с кнопкой для запроса прогноза на несколько дней.
+     */
     @Override
     public SendMessage handleMessage(Message message) {
         Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
+        SendMessage sendMessage = new SendMessage();
         User user;
 
         if(optionalUser.isEmpty() || optionalUser.get().getCity() == null){
@@ -49,13 +59,17 @@ public class ForecastForMyCityHandler implements MessageHandler{
             String errorReply = UserState.FORECAST_BY_COMMAND_NOT_FOUND.getTitle();
             return new SendMessage(message.getChatId().toString(), errorReply);
         }
-        String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
-
         user.incrementApiCalls();
         userService.updateUser(user);
+        userService.updateUserState(user.getChatId(), this.getOutputType());
+
+        String formattedForecast = ToMessageMapper.weatherInfoToMessage(weatherInfo);
+        sendMessage.setText(formattedForecast);
+        sendMessage.setChatId(message.getChatId());
+        sendMessage.setReplyMarkup(inlineKeyboardFactory.getForecastButton(weatherInfo.getCity()));
 
         log.info("user {} got forecast", message.getChatId());
-        return new SendMessage(message.getChatId().toString(), formattedForecast);
+        return sendMessage;
     }
 
     @Override
