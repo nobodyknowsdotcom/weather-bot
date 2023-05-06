@@ -1,6 +1,7 @@
-package com.example.weatherbot.botapi.buttons;
+package com.example.weatherbot.botapi.factory;
 
 import com.example.weatherbot.enums.Emoji;
+import com.example.weatherbot.enums.UserState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -13,6 +14,8 @@ import java.util.List;
 public class InlineKeyboardFactory {
     @Value("#{'${bot.most-popular-cities}'.split(',')}")
     private List<String> cities;
+    @Value("${bot.days-in-forecast}")
+    private Integer daysInForecast;
     public InlineKeyboardMarkup getPopularCitiesInlineKeyboard(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
@@ -23,7 +26,6 @@ public class InlineKeyboardFactory {
 
         return markup;
     }
-
     public InlineKeyboardMarkup getPopularCitiesWithChosenCity(String city){
         InlineKeyboardMarkup mockMarkup = getPopularCitiesInlineKeyboard();
         List<List<InlineKeyboardButton>> newMarkup = new ArrayList<>();
@@ -41,8 +43,24 @@ public class InlineKeyboardFactory {
         return new InlineKeyboardMarkup(newMarkup);
     }
 
+    /**
+     * Фабричный метод. Возвращает кнопку для получения прогноза на заданное количество дней.
+     * Количество дней для прогноза кладет в callbackData по схеме 'forecast=<количество дней>'
+     * @return Кнопка с встроенной CallbackData
+     */
+    public InlineKeyboardMarkup getForecastButton(){
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        List<InlineKeyboardButton> buttonRow = new ArrayList<>();
 
+        InlineKeyboardButton button = new InlineKeyboardButton(UserState.FORECAST_BY_BUTTON.getTitle());
+        button.setCallbackData(String.format("forecast=%s", this.daysInForecast));
 
+        buttonRow.add(button);
+        buttons.add(buttonRow);
+        markup.setKeyboard(buttons);
+        return markup;
+    }
     private List<InlineKeyboardButton> getCityAsButton(String city){
         List<InlineKeyboardButton> buttonRow = new ArrayList<>();
 
@@ -52,7 +70,6 @@ public class InlineKeyboardFactory {
 
         return buttonRow;
     }
-
     private List<InlineKeyboardButton> getCheckedCityButton(String city){
         List<InlineKeyboardButton> buttonRow = new ArrayList<>();
 

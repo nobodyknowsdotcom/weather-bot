@@ -27,7 +27,7 @@ public class WeatherMapper {
 
         sb.append(String.format("%s %s: %s",
                 Emoji.CALENDAR.getText(),
-                unixTimeToDate("yyy/MM/dd HH:mm", System.currentTimeMillis() / 1000L, weatherInfo.getTimezone()),
+                unixTimeToDate("yyyy/MM/dd HH:mm", System.currentTimeMillis() / 1000L, weatherInfo.getTimezone()),
                 "\n"
         ));
         sb.append(String.format("%s %s %s",

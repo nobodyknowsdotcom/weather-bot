@@ -19,6 +19,7 @@ public enum UserState {
     INIT_FORECAST_BY_COMMAND("Пришли название или координаты города, прогноз для которого хочешь получить"),
     FORECAST_BY_COMMAND(""),
     FORECAST_FOR_MY_CITY(""),
+    FORECAST_BY_BUTTON("Прогноз на 5 дней"),
     CHANGE_SCHEDULE_SETTINGS("Какие настройки для рассылки вы хотели бы установить?");
 
     public final String title;

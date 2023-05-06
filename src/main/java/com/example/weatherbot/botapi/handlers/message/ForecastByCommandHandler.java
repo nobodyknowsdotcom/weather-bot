@@ -1,10 +1,9 @@
 package com.example.weatherbot.botapi.handlers.message;
 
+import com.example.weatherbot.botapi.factory.InlineKeyboardFactory;
 import com.example.weatherbot.enums.UserState;
 import com.example.weatherbot.mapper.WeatherMapper;
 import com.example.weatherbot.model.User;
-import com.example.weatherbot.model.UserStateEntity;
-import com.example.weatherbot.service.StateService;
 import com.example.weatherbot.service.UserService;
 import com.example.weatherbot.service.weatherservice.WeatherInfo;
 import com.example.weatherbot.service.weatherservice.WeatherService;
@@ -23,18 +22,19 @@ public class ForecastByCommandHandler implements MessageHandler {
     @Value("${bot.api-quota}")
     private Integer apiQuota;
     private final WeatherService weatherService;
-    private final StateService stateService;
     private final UserService userService;
+    private final InlineKeyboardFactory inlineKeyboardFactory;
 
-    public ForecastByCommandHandler(WeatherService weatherService, StateService stateService, UserService userService) {
+    public ForecastByCommandHandler(WeatherService weatherService, UserService userService, InlineKeyboardFactory inlineKeyboardFactory) {
         this.weatherService = weatherService;
-        this.stateService = stateService;
         this.userService = userService;
+        this.inlineKeyboardFactory = inlineKeyboardFactory;
     }
 
     @Override
     public SendMessage handleMessage(Message message) {
         Optional<User> optionalUser = userService.findUserByChatId(message.getChatId());
+        SendMessage sendMessage = new SendMessage(message.getChatId().toString(), "");
         User user;
 
         if(optionalUser.isEmpty()){
@@ -48,7 +48,6 @@ public class ForecastByCommandHandler implements MessageHandler {
 
         try {
             WeatherInfo weatherInfo;
-
             if (message.hasLocation()){
                 Location location = message.getLocation();
                 weatherInfo = weatherService.getDailyWeatherInfoByCoordinates(location.getLatitude(), location.getLongitude());
@@ -57,18 +56,19 @@ public class ForecastByCommandHandler implements MessageHandler {
             }
             String formattedForecast = WeatherMapper.weatherInfoToMessage(weatherInfo);
 
-            UserStateEntity userState = stateService.getUserStateEntityOrCreate(getOutputType());
             user.incrementApiCalls();
-            user.setUserStateEntity(userState);
             userService.updateUser(user);
+            userService.updateUserState(user.getChatId(), this.getOutputType());
 
             log.info("user {} got forecast", message.getChatId());
-            return new SendMessage(message.getChatId().toString(), formattedForecast);
+            sendMessage.setReplyMarkup(inlineKeyboardFactory.getForecastButton());
+            sendMessage.setText(formattedForecast);
         } catch (Exception e){
             log.error(e.getMessage());
             String errorReply = UserState.FORECAST_BY_COMMAND_NOT_FOUND.getTitle();
-            return new SendMessage(message.getChatId().toString(), errorReply);
+            sendMessage.setText(errorReply);
         }
+        return sendMessage;
     }
 
     @Override

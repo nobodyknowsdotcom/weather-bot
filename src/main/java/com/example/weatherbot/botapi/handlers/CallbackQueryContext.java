@@ -16,14 +16,18 @@ import java.util.Map;
 public class CallbackQueryContext {
     private final Map<UserState, CallbackQueryHandler> callbackQueryHandlers = new HashMap<>();
     public CallbackQueryContext(List<CallbackQueryHandler> callbackQueryHandlers) {
-        callbackQueryHandlers.forEach(handler -> this.callbackQueryHandlers.put(handler.getHandlerName(), handler));
+        callbackQueryHandlers.forEach(handler -> this.callbackQueryHandlers.put(handler.getInputType(), handler));
     }
     public SendMessage handleCallbackQuery(CallbackQuery callbackQuery) {
-        SendMessage messageToSend = new SendMessage();
+        SendMessage messageToSend;
 
+        UserState userState;
         switch (callbackQuery.getData().split("=")[0]){
-            case "city" -> messageToSend = callbackQueryHandlers.get(UserState.IN_REGISTRATION).handle(callbackQuery);
+            case "city" -> userState = UserState.IN_REGISTRATION;
+            case "forecast" -> userState = UserState.FORECAST_BY_BUTTON;
+            default -> userState = UserState.IDLE;
         }
+        messageToSend = callbackQueryHandlers.get(userState).handle(callbackQuery);
 
         return messageToSend;
     }
