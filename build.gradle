@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -35,4 +35,23 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jar {
+    enabled = false
+}
+
+task printVersionName {
+    println project.version
+}
+
+task buildDocker(type: Exec) {
+    dependsOn build
+    workingDir "$projectDir"
+    commandLine 'docker', 'build', '--rm', '.', '-t', "nobodyknowsdotcom/weatherfy:${project.version}", "-f", "$projectDir/src/main/docker/Dockerfile"
+}
+
+task pushDocker(type: Exec) {
+    workingDir "$projectDir"
+    commandLine 'docker', 'push', "nobodyknowsdotcom/weatherfy:${project.version}"
 }
