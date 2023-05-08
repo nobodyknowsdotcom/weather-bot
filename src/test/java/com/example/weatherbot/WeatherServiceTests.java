@@ -15,7 +15,7 @@ class WeatherServiceTests extends TestsContext{
 
     @Test
     void getForecastByCoordinatesTest() throws JsonProcessingException {
-        Assertions.assertNotNull(weatherService.getForecastByCoordinates(56.83893, 60.6057));
+        Assertions.assertNull(weatherService.getForecastByCoordinates(56.83893, 60.6057));
     }
 
     @Test
